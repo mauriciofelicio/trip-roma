@@ -4,93 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Meta Tags Anti-Cache -->
+    <!-- Tags Anti-Cache -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <title>Roteiro: Roma (5 Noites) - Versão Final</title>
+    <title>Roma: Roteiro Oficial Débora</title>
     
-    <!-- Leaflet CSS e JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <!-- Leaflet JS & CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root {
-            --primary: #112a46; /* Azul Marinho Profundo */
-            --secondary: #4a6fa5; /* Azul Ardósia */
-            --tertiary: #c16622; /* Terracota */
-            --bg-light: #f5f7f9; /* Pérola */
-            --text-main: #2b3a4a;
-            --border-color: #dce1e6;
+            --primary: #112a46; 
+            --secondary: #4a6fa5; 
+            --tertiary: #c16622; 
+            --bg-light: #f5f7f9;
         }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--text-main); overflow: hidden;
-        }
-
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         .app-container { display: flex; flex-direction: column; height: 100vh; }
 
         header {
             background-color: var(--primary); color: white;
-            padding: 1rem 2rem; display: flex;
-            justify-content: space-between; align-items: center;
-            z-index: 100; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; flex-shrink: 0;
         }
-
-        header h1 { margin: 0; font-size: 1.3rem; }
-        header p { margin: 0; color: #94a3b8; font-size: 0.85rem; }
 
         .main-content { display: flex; flex: 1; overflow: hidden; }
 
-        /* Painel Esquerdo: Mapa Grande + Logística abaixo (scroll) */
+        /* PAINEL ESQUERDO: Mapa Gigante + Logística com Scroll */
         .left-pane {
-            flex: 1.4; display: flex; flex-direction: column;
-            height: 100%; border-right: 2px solid var(--border-color);
-            overflow-y: auto;
-            background-color: #f1f5f9;
+            flex: 1.5; display: flex; flex-direction: column;
+            height: 100%; border-right: 2px solid #dce1e6;
+            overflow-y: auto; background-color: #f1f5f9;
+            scroll-behavior: smooth;
         }
 
         .map-section {
-            /* O mapa agora ocupa quase toda a altura do viewport menos o header */
-            height: calc(100vh - 72px); 
-            width: 100%; position: sticky; top: 0; z-index: 50;
+            height: 85vh; width: 100%; position: relative;
             flex-shrink: 0; border-bottom: 4px solid var(--primary);
         }
+        #map { width: 100%; height: 100%; z-index: 1; }
 
-        #map { width: 100%; height: 100%; }
-
-        /* Central de Logística (Below the Fold) */
+        /* DASHBOARD DE LOGÍSTICA (Abaixo da Dobra) */
         .logistics-dashboard {
-            padding: 2rem 1.5rem; display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem; background: #edf2f7;
         }
 
         .logistics-card {
             background: white; border-radius: 12px; padding: 1.5rem;
-            border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease;
+            border: 1px solid #dce1e6; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        
-        .logistics-card:hover { transform: translateY(-3px); }
 
         .logistics-card h3 { 
             margin: 0 0 1rem 0; font-size: 0.8rem; font-weight: 800;
             text-transform: uppercase; color: var(--secondary); border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 0.6rem; display: flex; align-items: center; gap: 0.6rem;
+            padding-bottom: 0.5rem;
         }
 
         .logistics-detail { margin-bottom: 0.8rem; }
         .logistics-detail label { display: block; font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; }
-        .logistics-detail span { display: block; font-size: 1rem; font-weight: 600; color: var(--primary); line-height: 1.3; }
+        .logistics-detail span { display: block; font-size: 0.95rem; font-weight: 600; color: var(--primary); }
 
-        /* Painel Direito: Roteiro */
+        /* PAINEL DIREITO: Roteiro Completo */
         .itinerary-pane {
             flex: 1; max-width: 550px; height: 100%;
             overflow-y: auto; background-color: var(--bg-light);
@@ -100,7 +82,7 @@
         .base-card {
             background: white; border-radius: 12px; padding: 1.5rem;
             margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
+            border: 1px solid #dce1e6;
         }
 
         .base-header {
@@ -108,9 +90,6 @@
             border-bottom: 2px solid var(--bg-light); padding-bottom: 0.8rem; margin-bottom: 1rem;
         }
 
-        .base-header h2 { color: var(--primary); margin: 0; font-size: 1.2rem; }
-
-        /* Estilos de Informação */
         .time-badge {
             background-color: var(--primary); color: white;
             padding: 2px 7px; border-radius: 4px; font-size: 0.75rem;
@@ -119,30 +98,25 @@
 
         details {
             margin-top: 0.8rem; background: #f8fafc;
-            border-radius: 8px; border: 1px solid var(--border-color);
-            padding: 0.8rem;
+            border-radius: 8px; border: 1px solid #dce1e6; padding: 0.8rem;
         }
         summary { cursor: pointer; font-weight: bold; color: var(--secondary); font-size: 0.85rem; outline: none; }
-        .details-content { margin-top: 0.6rem; font-size: 0.85rem; color: #475569; line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 0.6rem; }
 
-        /* Pinos do Mapa */
         .day-marker-pin {
             width: 28px; height: 28px; border-radius: 50%; border: 2px solid white;
             color: white; font-size: 13px; font-weight: bold;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 3px 8px rgba(0,0,0,0.3); transition: transform 0.2s;
         }
-        .day-marker-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
 
         .reset-view-btn {
             position: absolute; top: 12px; left: 55px; z-index: 9999;
             background: var(--primary); color: white; border: none;
             padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s ease;
-            display: flex; align-items: center; gap: 8px;
-            opacity: 0; visibility: hidden;
+            display: flex; align-items: center; gap: 8px; opacity: 0; visibility: hidden;
         }
-        .reset-view-btn.visible { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
+        .reset-view-btn.visible { opacity: 1; visibility: visible; }
 
         .fly-btn {
             background: rgba(74, 111, 165, 0.1); color: var(--secondary);
@@ -151,11 +125,19 @@
         }
 
         .clickable-place { cursor: pointer; color: var(--secondary); border-bottom: 1px dashed var(--secondary); }
+        .clickable-place:hover { background-color: rgba(74, 111, 165, 0.05); }
+
+        .map-link {
+            font-size: 0.75rem; background: rgba(193, 102, 34, 0.1);
+            color: var(--tertiary); padding: 4px 10px; border-radius: 12px;
+            text-decoration: none; font-weight: bold; display: inline-block; margin-top: 8px;
+        }
+        .map-link:hover { background: var(--tertiary); color: white; }
 
         @media (max-width: 1000px) {
             .main-content { flex-direction: column; overflow: auto; }
-            .left-pane { flex: none; height: auto; border-right: none; }
-            .map-section { height: 50vh; position: relative; }
+            .left-pane { flex: none; height: auto; border-right: none; overflow-y: visible; }
+            .map-section { height: 50vh; }
             .itinerary-pane { flex: none; max-width: 100%; height: auto; }
             body, html { overflow: auto; }
         }
@@ -166,161 +148,143 @@
     <div class="app-container">
         <header>
             <div>
-                <h1 class="font-bold">Roma: 4 a 9 de Abril</h1>
-                <p>Maurício, Débora e Daniel • Itinerário Oficial</p>
+                <h1 class="font-bold text-lg uppercase tracking-tight">Roma 2026: Roteiro da Débora</h1>
+                <p class="text-xs text-slate-400">Maurício, Débora e Daniel • 4 a 9 de Abril</p>
             </div>
-            <div class="hidden sm:block">
-                <p class="text-right">📍 Sede: Via Gregorio Ricci Curbastro, 34</p>
+            <div class="hidden md:block text-right">
+                <span class="text-xs font-bold bg-tertiary px-2 py-1 rounded">Cópia de Segurança GitHub</span>
             </div>
         </header>
 
         <div class="main-content">
             <!-- PAINEL ESQUERDO -->
-            <div class="left-pane">
+            <div class="left-pane" id="left-pane-scroll">
                 <div class="map-section">
                     <div id="map"></div>
-                    <button id="reset-btn" class="reset-view-btn" onclick="resetMapView()">
-                        🗺️ Mostrar Tudo
-                    </button>
+                    <button id="reset-btn" class="reset-view-btn" onclick="resetMapView()">🗺️ Ver Tudo</button>
                 </div>
 
-                <!-- CENTRAL DE LOGÍSTICA (BELOW THE FOLD) -->
+                <!-- LOGÍSTICA (BELOW THE FOLD) -->
                 <div class="logistics-dashboard">
-                    <!-- CARTÃO VOOS -->
                     <div class="logistics-card" style="border-top: 4px solid var(--secondary);">
                         <h3>✈️ Voos Ryanair</h3>
                         <div class="logistics-detail">
-                            <label>Ida (Sáb 4 Abr) • FR #197</label>
-                            <span>LIS 10:35 ➔ FCO 14:35</span>
+                            <label>Ida (Sat 4 Apr)</label>
+                            <span>LIS 10:35 ➔ FCO 14:35 | FR #197</span>
                         </div>
                         <div class="logistics-detail">
-                            <label>Volta (Qui 9 Abr) • FR 9903</label>
-                            <span>FCO 19:35 ➔ LIS 21:50</span>
-                        </div>
-                        <div class="logistics-detail">
-                            <label>Estado</label>
-                            <span>Pendente / Check-in</span>
+                            <label>Volta (Thu 9 Apr)</label>
+                            <span>FCO 19:35 ➔ LIS 21:50 | FR 9903</span>
                         </div>
                     </div>
 
-                    <!-- CARTÃO ALOJAMENTO -->
                     <div class="logistics-card" style="border-top: 4px solid var(--tertiary);">
-                        <h3>🏠 Alojamento (Airbnb)</h3>
+                        <h3>🏠 Airbnb Roma</h3>
                         <div class="logistics-detail">
-                            <label>Endereço</label>
+                            <label>Morada</label>
                             <span>Via Gregorio Ricci Curbastro, 34</span>
-                            <span style="font-weight: 400; font-size: 0.75rem;">00149 Roma RM, Italy</span>
-                        </div>
-                        <div class="logistics-detail">
-                            <label>Check-in</label>
-                            <span>Sáb, 4 Abr • 15:00</span>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy" target="_blank" class="map-link">📍 Abrir no Google Maps</a>
                         </div>
                     </div>
 
-                    <!-- CARTÃO PAPA -->
                     <div class="logistics-card" style="border-top: 4px solid #f59e0b;">
                         <h3>🇻🇦 Audiência Papal</h3>
                         <div class="logistics-detail">
-                            <label>ID de Reserva</label>
-                            <span>1570_UG_08.04.2026</span>
+                            <label>Reserva</label>
+                            <span class="font-mono">1570_UG_08.04.2026</span>
                         </div>
                         <div class="logistics-detail">
-                            <label>Bilhetes</label>
-                            <span>3 Unidades Confirmadas</span>
-                        </div>
-                        <div class="logistics-detail">
-                            <label>Recolha (Bronze Door)</label>
-                            <span>7 Abr (15h-19h) ou 8 Abr (desde 7:30h)</span>
+                            <label>Recolha de Bilhetes</label>
+                            <span>7 Abr (15h-19h) ou 8 Abr (07:30)</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- PAINEL DIREITO -->
-            <div class="itinerary-pane" id="itinerary">
+            <div class="itinerary-pane">
                 
+                <!-- DIA 4 -->
                 <div class="base-card" style="border-left: 5px solid #c16622;">
                     <div class="base-header">
-                        <h2 style="color: #c16622;">🏛️ Dia 4: Chegada</h2>
+                        <h2 class="font-bold text-primary">🏛️ Sábado, 4 Abr: Chegada</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8986, 12.4769, 15)">Mapa</button>
                     </div>
-                    <div class="day-block">
-                        <ul class="place-list" style="list-style: none; padding: 0;">
-                            <li><span class="time-badge">14:35</span> Chegada ao FCO. Transfer para Airbnb.</li>
-                            <li class="mt-2"><strong class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</strong>, <strong class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</strong> e <strong class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Fontana di Trevi</strong>.</li>
-                        </ul>
-                    </div>
+                    <ul class="text-sm space-y-3">
+                        <li><span class="time-badge">14:35</span> Chegada ao FCO.</li>
+                        <li>🏠 <strong>Check-in:</strong> Via Gregorio Ricci Curbastro, 34.</li>
+                        <li>🚶 <strong>Caminhada:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span> e <span class="clickable-place" onclick="flyToMap(41.9059, 12.4827, 17)">Spanish Steps</span>.</li>
+                    </ul>
                 </div>
 
+                <!-- DIA 5 -->
                 <div class="base-card" style="border-left: 5px solid #10b981;">
                     <div class="base-header">
-                        <h2 style="color: #10b981;">🌳 Dia 5: Via Appia</h2>
+                        <h2 class="font-bold text-emerald-700">🌳 Domingo, 5 Abr: Via Appia</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8500, 12.5200, 13)">Mapa</button>
                     </div>
-                    <div class="day-block">
-                        <ul class="place-list" style="list-style: none; padding: 0;">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8587, 12.5106, 16)">Catacumbas de São Calisto</strong>.</li>
-                            <li class="mt-2">Passeio pela Appia Antica.</li>
-                        </ul>
-                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>💀 <span class="clickable-place" onclick="flyToMap(41.8587, 12.5106, 16)">Catacombe di San Callisto</span>.</li>
+                        <li>🌿 <span class="clickable-place" onclick="flyToMap(41.8675, 12.5125, 15)">Parco della Caffarella</span>.</li>
+                        <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8525, 12.5204, 16)">Mausoleum of Cecilia Metella</span>.</li>
+                        <li>🏰 <span class="clickable-place" onclick="flyToMap(41.8306, 12.5615, 15)">Villa dei Quintili</span> (Parque Appia Antica).</li>
+                    </ul>
                 </div>
 
+                <!-- DIA 6 -->
+                <div class="base-card" style="border-left: 5px solid #8b5cf6;">
+                    <div class="base-header">
+                        <h2 class="font-bold text-violet-700">🚆 Segunda, 6 Abr: Ostia Antica</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.7558, 12.2921, 12)">Mapa</button>
+                    </div>
+                    <ul class="text-sm space-y-3">
+                        <li>🥐 Pequeno-almoço: <span class="clickable-place" onclick="flyToMap(41.8864, 12.4695, 18)">Le Levain Roma</span>.</li>
+                        <li>🥪 Almoço: <span class="clickable-place" onclick="flyToMap(41.8789, 12.4769, 18)">Mordi & Vai</span>.</li>
+                        <li>🏺 Tarde: <span class="clickable-place" onclick="flyToMap(41.7558, 12.2921, 16)">Ostia Antica</span> (Comboio Roma-Lido).</li>
+                    </ul>
+                </div>
+
+                <!-- DIA 7 -->
                 <div class="base-card" style="border-left: 5px solid #ef4444;">
                     <div class="base-header">
-                        <h2 style="color: #ef4444;">🏟️ Dia 7: Imperial</h2>
+                        <h2 class="font-bold text-red-700">🏟️ Terça, 7 Abr: Roma Imperial</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8902, 12.4922, 16)">Mapa</button>
                     </div>
-                    <div class="day-block">
-                        <ul class="place-list" style="list-style: none; padding: 0;">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Coliseu</strong> e Fórum Romano.</li>
-                            <li class="mt-3">
-                                📌 <strong>Recolha de Bilhetes</strong>
-                                <details>
-                                    <summary>Instruções Portone di Bronzo</summary>
-                                    <div class="details-content">
-                                        <span class="time-badge">15:00 - 19:00</span> Window de recolha preferencial.<br>
-                                        <strong>Local:</strong> <strong class="clickable-place" onclick="flyToMap(41.9022, 12.4557, 18)">Bronze Door</strong> (Lado direito da colunata).
-                                    </div>
-                                </details>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul class="text-sm space-y-3">
+                        <li>🏟️ <span class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Colosseum</span>, Palatine Hill e Circus Maximus.</li>
+                        <li>🍴 Jantar: <span class="clickable-place" onclick="flyToMap(41.8918, 12.4716, 18)">Suppli Roma</span>.</li>
+                        <li class="p-3 bg-red-50 rounded border border-red-100">
+                            <strong>⚠️ Recolha de Bilhetes Papa</strong>
+                            <p class="text-xs mt-1">Das 15:00 às 19:00 na <span class="clickable-place font-bold" onclick="flyToMap(41.9022, 12.4557, 18)">Bronze Door</span>.</p>
+                        </li>
+                    </ul>
                 </div>
 
+                <!-- DIA 8 -->
                 <div class="base-card" style="border-left: 5px solid #f59e0b;">
                     <div class="base-header">
-                        <h2 style="color: #f59e0b;">⛪ Dia 8: Vaticano</h2>
+                        <h2 class="font-bold text-amber-700">⛪ Quarta, 8 Abr: Vaticano</h2>
                         <button class="fly-btn" onclick="flyToMap(41.9021, 12.4539, 16)">Mapa</button>
                     </div>
-                    <div class="day-block">
-                        <ul class="place-list" style="list-style: none; padding: 0;">
-                            <li>
-                                🇻🇦 <strong>Audiência Papal</strong>
-                                <details open>
-                                    <summary>Dados da Reserva</summary>
-                                    <div class="details-content">
-                                        <span class="time-badge">07:30</span> Chegada recomendada.<br>
-                                        <span class="time-badge">10:00</span> Início da Audiência.<br>
-                                        <strong>Reserva:</strong> 1570_UG_08.04.2026
-                                    </div>
-                                </details>
-                            </li>
-                            <li class="mt-3"><strong class="clickable-place" onclick="flyToMap(41.9065, 12.4536, 17)">Museus do Vaticano</strong> (Capela Sistina).</li>
-                        </ul>
-                    </div>
+                    <ul class="text-sm space-y-3">
+                        <li>🇻🇦 <span class="time-badge">10:00</span> <strong>Audiência Papal</strong> (Piazza S. Pietro).</li>
+                        <li>🎨 <span class="clickable-place" onclick="flyToMap(41.9065, 12.4536, 17)">Vatican Museums</span> e Basílica.</li>
+                        <li>🏰 <span class="clickable-place" onclick="flyToMap(41.9031, 12.4663, 17)">Castel Sant'Angelo</span>.</li>
+                    </ul>
                 </div>
 
+                <!-- DIA 9 -->
                 <div class="base-card" style="border-left: 5px solid #06b6d4;">
                     <div class="base-header">
-                        <h2>🛡️ Dia 9: Capitólio</h2>
+                        <h2 class="font-bold text-cyan-700">🛡️ Quinta, 9 Abr: Capitólio</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8930, 12.4842, 17)">Mapa</button>
                     </div>
-                    <div class="day-block">
-                        <ul class="place-list" style="list-style: none; padding: 0;">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8930, 12.4842, 18)">Lupa Capitolina</strong> e Teatro di Marcello.</li>
-                            <li class="mt-2"><span class="time-badge">19:35</span> Voo de regresso Ryanair.</li>
-                        </ul>
-                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>☕ Café: <span class="clickable-place" onclick="flyToMap(41.8981, 12.4764, 18)">Sant' Eustachio Caffè</span>.</li>
+                        <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8938, 12.4829, 18)">Palazzo Nuovo</span> e Tabularium.</li>
+                        <li>🐺 <span class="clickable-place" onclick="flyToMap(41.8930, 12.4842, 18)">Lupa Capitolina</span>.</li>
+                        <li class="mt-4"><span class="time-badge">19:35</span> Voo de Regresso Ryanair FR 9903.</li>
+                    </ul>
                 </div>
 
             </div>
@@ -338,7 +302,12 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            map = L.map('map', { zoomControl: true }).setView([41.895, 12.485], 13);
+            map = L.map('map', { 
+                zoomControl: true,
+                scrollWheelZoom: false 
+            }).setView([41.895, 12.485], 13);
+
+            map.on('focus', () => { map.scrollWheelZoom.enable(); });
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OSM'
@@ -348,7 +317,7 @@
             L.marker(hotelPos, { 
                 icon: L.divIcon({ 
                     className: 'day-marker-pin', 
-                    html: '<div style="background:#112a46; border-radius:50%; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-size:14px;">🏠</div>', 
+                    html: '<div style="background:#112a46; border-radius:50%; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; border:2px solid white;">🏠</div>', 
                     iconSize: [32, 32],
                     iconAnchor: [16, 16]
                 }) 
@@ -357,14 +326,16 @@
             const places = [
                 { name: "Pantheon", pos: [41.8986, 12.4769], day: 4 },
                 { name: "Trevi Fountain", pos: [41.9009, 12.4833], day: 4 },
-                { name: "Piazza Navona", pos: [41.8992, 12.4731], day: 4 },
-                { name: "Catacumbas San Callisto", pos: [41.8587, 12.5106], day: 5 },
+                { name: "Spanish Steps", pos: [41.9059, 12.4827], day: 4 },
+                { name: "Catacumbas", pos: [41.8587, 12.5106], day: 5 },
+                { name: "Villa dei Quintili", pos: [41.8306, 12.5615], day: 5 },
+                { name: "Le Levain", pos: [41.8864, 12.4695], day: 6 },
                 { name: "Ostia Antica", pos: [41.7558, 12.2921], day: 6 },
-                { name: "Coliseu", pos: [41.8902, 12.4922], day: 7 },
+                { name: "Coliseum", pos: [41.8902, 12.4922], day: 7 },
                 { name: "Bronze Door", pos: [41.9022, 12.4557], day: 7 },
-                { name: "Audiência Papal", pos: [41.9021, 12.4539], day: 8 },
-                { name: "Museus do Vaticano", pos: [41.9065, 12.4536], day: 8 },
-                { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9 }
+                { name: "Vatican Museums", pos: [41.9065, 12.4536], day: 8 },
+                { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9 },
+                { name: "Palazzo Nuovo", pos: [41.8938, 12.4829], day: 9 }
             ];
 
             places.forEach(p => {
@@ -394,6 +365,7 @@
         });
 
         function flyToMap(lat, lng, zoom) {
+            document.getElementById('left-pane-scroll').scrollTo({ top: 0, behavior: 'smooth' });
             isResetting = false;
             map.flyTo([lat, lng], zoom || 15, { duration: 1.5 });
         }
