@@ -148,11 +148,11 @@
     <div class="app-container">
         <header>
             <div>
-                <h1 class="font-bold text-lg uppercase tracking-tight">Roma 2026: Roteiro da Débora</h1>
+                <h1 class="font-bold text-lg uppercase tracking-tight">Roma 2026: Roteiro Oficial Débora</h1>
                 <p class="text-xs text-slate-400">Maurício, Débora e Daniel • 4 a 9 de Abril</p>
             </div>
             <div class="hidden md:block text-right">
-                <span class="text-xs font-bold bg-tertiary px-2 py-1 rounded">Cópia de Segurança GitHub</span>
+                <span class="text-xs font-bold bg-tertiary px-2 py-1 rounded">Logística Confirmada</span>
             </div>
         </header>
 
@@ -166,36 +166,55 @@
 
                 <!-- LOGÍSTICA (BELOW THE FOLD) -->
                 <div class="logistics-dashboard">
+                    <!-- CARTÃO VOOS -->
                     <div class="logistics-card" style="border-top: 4px solid var(--secondary);">
                         <h3>✈️ Voos Ryanair</h3>
                         <div class="logistics-detail">
+                            <label>Reserva</label>
+                            <span class="font-mono font-bold text-indigo-700">MR5KHL</span>
+                        </div>
+                        <div class="logistics-detail">
                             <label>Ida (Sat 4 Apr)</label>
-                            <span>LIS 10:35 ➔ FCO 14:35 | FR #197</span>
+                            <span>LIS 10:35 ➔ FCO 14:35 | FR 8197</span>
+                            <span class="text-xs text-slate-500">Lugares: 31D, 31E, 31F</span>
                         </div>
                         <div class="logistics-detail">
                             <label>Volta (Thu 9 Apr)</label>
                             <span>FCO 19:35 ➔ LIS 21:50 | FR 9903</span>
+                            <span class="text-xs text-slate-500">Lugares: 30C, 30B, 30A</span>
                         </div>
                     </div>
 
+                    <!-- CARTÃO ALOJAMENTO -->
                     <div class="logistics-card" style="border-top: 4px solid var(--tertiary);">
                         <h3>🏠 Airbnb Roma</h3>
                         <div class="logistics-detail">
+                            <label>Anfitrião</label>
+                            <span>Emanuele (+39 338 540 5894)</span>
+                        </div>
+                        <div class="logistics-detail">
                             <label>Morada</label>
                             <span>Via Gregorio Ricci Curbastro, 34</span>
+                            <span class="text-xs text-slate-500">Scala B2</span>
                             <a href="https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy" target="_blank" class="map-link">📍 Abrir no Google Maps</a>
+                        </div>
+                        <div class="logistics-detail">
+                            <label>Check-in / Check-out</label>
+                            <span>4 Abr (>15:00) / 9 Abr (<10:00)</span>
                         </div>
                     </div>
 
+                    <!-- CARTÃO PAPA -->
                     <div class="logistics-card" style="border-top: 4px solid #f59e0b;">
                         <h3>🇻🇦 Audiência Papal</h3>
                         <div class="logistics-detail">
-                            <label>Reserva</label>
-                            <span class="font-mono">1570_UG_08.04.2026</span>
+                            <label>Número de Reserva</label>
+                            <span class="font-mono text-indigo-700 font-bold">1570_UG_08.04.2026</span>
                         </div>
                         <div class="logistics-detail">
                             <label>Recolha de Bilhetes</label>
-                            <span>7 Abr (15h-19h) ou 8 Abr (07:30)</span>
+                            <span>Bronze Door (Portone di Bronzo)</span>
+                            <span class="text-xs text-slate-500">Colunata Direita da Praça S. Pedro</span>
                         </div>
                     </div>
                 </div>
@@ -212,8 +231,11 @@
                     </div>
                     <ul class="text-sm space-y-3">
                         <li><span class="time-badge">14:35</span> Chegada ao FCO.</li>
-                        <li>🏠 <strong>Check-in:</strong> Via Gregorio Ricci Curbastro, 34.</li>
-                        <li>🚶 <strong>Caminhada:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span> e <span class="clickable-place" onclick="flyToMap(41.9059, 12.4827, 17)">Spanish Steps</span>.</li>
+                        <li>🏠 <strong>Airbnb:</strong> Via Gregorio Ricci Curbastro, 34.</li>
+                        <li class="p-2 bg-slate-50 rounded border border-slate-100 italic text-xs">
+                            Contactar Emanuele: +39 338 540 5894
+                        </li>
+                        <li>🚶 <strong>Caminhada Centro:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span> e <span class="clickable-place" onclick="flyToMap(41.9059, 12.4827, 17)">Spanish Steps</span>.</li>
                     </ul>
                 </div>
 
@@ -227,7 +249,7 @@
                         <li>💀 <span class="clickable-place" onclick="flyToMap(41.8587, 12.5106, 16)">Catacombe di San Callisto</span>.</li>
                         <li>🌿 <span class="clickable-place" onclick="flyToMap(41.8675, 12.5125, 15)">Parco della Caffarella</span>.</li>
                         <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8525, 12.5204, 16)">Mausoleum of Cecilia Metella</span>.</li>
-                        <li>🏰 <span class="clickable-place" onclick="flyToMap(41.8306, 12.5615, 15)">Villa dei Quintili</span> (Parque Appia Antica).</li>
+                        <li>🏰 <span class="clickable-place" onclick="flyToMap(41.8306, 12.5615, 15)">Villa dei Quintili</span>.</li>
                     </ul>
                 </div>
 
@@ -240,7 +262,7 @@
                     <ul class="text-sm space-y-3">
                         <li>🥐 Pequeno-almoço: <span class="clickable-place" onclick="flyToMap(41.8864, 12.4695, 18)">Le Levain Roma</span>.</li>
                         <li>🥪 Almoço: <span class="clickable-place" onclick="flyToMap(41.8789, 12.4769, 18)">Mordi & Vai</span>.</li>
-                        <li>🏺 Tarde: <span class="clickable-place" onclick="flyToMap(41.7558, 12.2921, 16)">Ostia Antica</span> (Comboio Roma-Lido).</li>
+                        <li>🏺 Tarde: <span class="clickable-place" onclick="flyToMap(41.7558, 12.2921, 16)">Ostia Antica</span>.</li>
                     </ul>
                 </div>
 
@@ -251,7 +273,7 @@
                         <button class="fly-btn" onclick="flyToMap(41.8902, 12.4922, 16)">Mapa</button>
                     </div>
                     <ul class="text-sm space-y-3">
-                        <li>🏟️ <span class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Colosseum</span>, Palatine Hill e Circus Maximus.</li>
+                        <li>🏟️ <span class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Colosseum</span>, <span class="clickable-place" onclick="flyToMap(41.8892, 12.4875, 17)">Palatine Hill</span> e <span class="clickable-place" onclick="flyToMap(41.8860, 12.4853, 17)">Circus Maximus</span>.</li>
                         <li>🍴 Jantar: <span class="clickable-place" onclick="flyToMap(41.8918, 12.4716, 18)">Suppli Roma</span>.</li>
                         <li class="p-3 bg-red-50 rounded border border-red-100">
                             <strong>⚠️ Recolha de Bilhetes Papa</strong>
@@ -281,7 +303,7 @@
                     </div>
                     <ul class="text-sm space-y-2">
                         <li>☕ Café: <span class="clickable-place" onclick="flyToMap(41.8981, 12.4764, 18)">Sant' Eustachio Caffè</span>.</li>
-                        <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8938, 12.4829, 18)">Palazzo Nuovo</span> e Tabularium.</li>
+                        <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8938, 12.4829, 18)">Palazzo Nuovo</span> e <span class="clickable-place" onclick="flyToMap(41.8927, 12.4836, 18)">Tabularium</span>.</li>
                         <li>🐺 <span class="clickable-place" onclick="flyToMap(41.8930, 12.4842, 18)">Lupa Capitolina</span>.</li>
                         <li class="mt-4"><span class="time-badge">19:35</span> Voo de Regresso Ryanair FR 9903.</li>
                     </ul>
@@ -300,6 +322,8 @@
             4: "#c16622", 5: "#10b981", 6: "#8b5cf6", 
             7: "#ef4444", 8: "#f59e0b", 9: "#06b6d4"
         };
+
+        const airbnbUrl = "https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy";
 
         document.addEventListener('DOMContentLoaded', () => {
             map = L.map('map', { 
@@ -321,21 +345,32 @@
                     iconSize: [32, 32],
                     iconAnchor: [16, 16]
                 }) 
-            }).addTo(map).bindPopup("<b>Airbnb Roma</b>");
+            }).addTo(map).bindPopup(`<b>Airbnb Roma</b><br>Via G. Ricci Curbastro, 34<br>Anfitrião: Emanuele<br><a href="${airbnbUrl}" target="_blank" style="color: #c16622; font-weight: bold;">Abrir Maps 📍</a>`);
 
             const places = [
                 { name: "Pantheon", pos: [41.8986, 12.4769], day: 4 },
+                { name: "Piazza Navona", pos: [41.8992, 12.4731], day: 4 },
                 { name: "Trevi Fountain", pos: [41.9009, 12.4833], day: 4 },
                 { name: "Spanish Steps", pos: [41.9059, 12.4827], day: 4 },
                 { name: "Catacumbas", pos: [41.8587, 12.5106], day: 5 },
+                { name: "Parco della Caffarella", pos: [41.8675, 12.5125], day: 5 },
+                { name: "Cecilia Metella", pos: [41.8525, 12.5204], day: 5 },
                 { name: "Villa dei Quintili", pos: [41.8306, 12.5615], day: 5 },
                 { name: "Le Levain", pos: [41.8864, 12.4695], day: 6 },
+                { name: "Mordi & Vai", pos: [41.8789, 12.4769], day: 6 },
                 { name: "Ostia Antica", pos: [41.7558, 12.2921], day: 6 },
                 { name: "Coliseum", pos: [41.8902, 12.4922], day: 7 },
+                { name: "Palatine Hill", pos: [41.8892, 12.4875], day: 7 },
+                { name: "Circus Maximus", pos: [41.8860, 12.4853], day: 7 },
+                { name: "Suppli Roma", pos: [41.8918, 12.4716], day: 7 },
                 { name: "Bronze Door", pos: [41.9022, 12.4557], day: 7 },
+                { name: "Audiência Papal", pos: [41.9021, 12.4539], day: 8 },
                 { name: "Vatican Museums", pos: [41.9065, 12.4536], day: 8 },
-                { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9 },
-                { name: "Palazzo Nuovo", pos: [41.8938, 12.4829], day: 9 }
+                { name: "Castel Sant'Angelo", pos: [41.9031, 12.4663], day: 8 },
+                { name: "Sant' Eustachio Caffè", pos: [41.8981, 12.4764], day: 9 },
+                { name: "Palazzo Nuovo", pos: [41.8938, 12.4829], day: 9 },
+                { name: "Tabularium", pos: [41.8927, 12.4836], day: 9 },
+                { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9 }
             ];
 
             places.forEach(p => {
