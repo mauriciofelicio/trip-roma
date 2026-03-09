@@ -4,268 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Meta Tags Anti-Cache para garantir a versão mais recente sempre -->
+    <!-- Meta Tags Anti-Cache -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <title>Roteiro: Roma (5 Noites)</title>
+    <title>Roteiro: Roma (5 Noites) - Versão Débora</title>
     
-    <!-- Leaflet CSS e JS (Carregamento síncrono para evitar falhas) -->
+    <!-- Leaflet CSS e JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     
     <style>
         :root {
             --primary: #112a46; /* Azul Marinho Profundo */
-            --secondary: #4a6fa5; /* Azul Ardósia Suave */
+            --secondary: #4a6fa5; /* Azul Ardósia */
             --tertiary: #c16622; /* Terracota */
-            --bg-light: #f5f7f9; /* Fundo Pérola */
-            --text-main: #2b3a4a; /* Cinza Ardósia Escuro */
+            --bg-light: #f5f7f9; /* Pérola */
+            --text-main: #2b3a4a; /* Cinza Ardósia */
             --border-color: #dce1e6;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+            margin: 0; padding: 0; height: 100%;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--text-main);
-            overflow: hidden;
+            color: var(--text-main); overflow: hidden;
         }
 
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+        .app-container { display: flex; flex-direction: column; height: 100vh; }
 
         header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            z-index: 10;
-            flex-shrink: 0;
+            background-color: var(--primary); color: white;
+            padding: 1.2rem 2rem; display: flex;
+            justify-content: space-between; align-items: center;
+            z-index: 10; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
+        header h1 { margin: 0; font-size: 1.3rem; }
+        header p { margin: 0; color: #94a3b8; font-size: 0.85rem; }
 
-        header p {
-            margin: 0;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
+        .main-content { display: flex; flex: 1; overflow: hidden; }
 
         .map-pane {
-            flex: 1;
-            height: 100%;
-            background: #e2e8f0;
-            position: relative;
-            z-index: 1;
-            border-right: 2px solid var(--border-color);
+            flex: 1; height: 100%; background: #e2e8f0;
+            position: relative; z-index: 1; border-right: 2px solid var(--border-color);
         }
 
-        #map {
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
+        #map { width: 100%; height: 100%; }
 
         .reset-view-btn {
-            position: absolute;
-            top: 12px;
-            left: 55px;
-            z-index: 9999;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: translateY(-10px);
+            position: absolute; top: 12px; left: 55px; z-index: 9999;
+            background: var(--primary); color: white; border: none;
+            padding: 8px 14px; border-radius: 8px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+            opacity: 0; visibility: hidden; transform: translateY(-10px);
         }
 
-        .reset-view-btn.visible {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
-        .reset-view-btn:hover {
-            background: var(--tertiary);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
-        }
+        .reset-view-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+        .reset-view-btn:hover { background: var(--tertiary); transform: translateY(-2px); }
 
         .itinerary-pane {
-            flex: 1;
-            max-width: 600px;
-            height: 100%;
-            overflow-y: auto;
-            background-color: var(--bg-light);
-            padding: 2rem;
-            scroll-behavior: smooth;
+            flex: 1; max-width: 580px; height: 100%;
+            overflow-y: auto; background-color: var(--bg-light);
+            padding: 1.5rem; scroll-behavior: smooth;
         }
 
         .base-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background: white; border-radius: 12px; padding: 1.5rem;
+            margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             border: 1px solid var(--border-color);
         }
 
         .base-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--bg-light);
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--bg-light); padding-bottom: 0.8rem; margin-bottom: 1rem;
         }
 
-        .base-header h2 {
-            color: var(--primary);
-            margin: 0;
-            font-size: 1.4rem;
-        }
+        .base-header h2 { color: var(--primary); margin: 0; font-size: 1.25rem; }
 
         .fly-btn {
-            background: rgba(74, 111, 165, 0.1);
-            color: var(--secondary);
-            border: 1px solid rgba(74, 111, 165, 0.3);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+            background: rgba(74, 111, 165, 0.1); color: var(--secondary);
+            border: 1px solid rgba(74, 111, 165, 0.3); padding: 6px 10px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem;
         }
 
-        .fly-btn:hover {
-            background: var(--secondary);
-            color: white;
-        }
+        .fly-btn:hover { background: var(--secondary); color: white; }
 
-        .day-block {
-            margin-bottom: 1.5rem;
-        }
-
+        .day-block { margin-bottom: 1.2rem; }
         .day-title {
-            font-weight: bold;
-            color: var(--tertiary);
-            font-size: 1.1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-weight: bold; color: var(--tertiary); font-size: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .map-link {
-            font-size: 0.8rem;
-            background: rgba(74, 111, 165, 0.08);
-            color: var(--secondary);
-            padding: 4px 8px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: normal;
+            font-size: 0.75rem; background: rgba(74, 111, 165, 0.08);
+            color: var(--secondary); padding: 3px 8px; border-radius: 15px;
+            text-decoration: none; font-weight: normal;
         }
 
-        .map-link:hover {
-            background: rgba(74, 111, 165, 0.15);
-            color: var(--primary);
-        }
-
-        .place-list {
-            margin-top: 0.5rem;
-            padding-left: 1.5rem;
-            color: #475569;
-            line-height: 1.6;
-        }
-
-        .place-list li {
-            margin-bottom: 0.5rem;
-        }
+        .place-list { margin-top: 0.4rem; padding-left: 1.2rem; color: #475569; line-height: 1.5; font-size: 0.9rem; }
+        .place-list li { margin-bottom: 0.3rem; }
 
         .clickable-place {
-            cursor: pointer;
-            color: var(--secondary);
-            border-bottom: 1px dashed var(--secondary);
-            transition: all 0.2s;
+            cursor: pointer; color: var(--secondary); border-bottom: 1px dashed var(--secondary);
         }
 
-        .clickable-place:hover {
-            color: var(--primary);
-            border-bottom: 1px solid var(--primary);
-            background-color: rgba(74, 111, 165, 0.05);
-        }
+        .clickable-place:hover { color: var(--primary); background-color: rgba(74, 111, 165, 0.05); }
 
         .custom-marker {
-            background: var(--secondary);
-            color: white;
-            border-radius: 50%;
-            border: 2px solid white;
-            text-align: center;
-            font-weight: bold;
-            line-height: 24px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            background: var(--secondary); color: white; border-radius: 50%;
+            border: 2px solid white; text-align: center; font-weight: bold;
+            line-height: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
-        .airport-marker {
-            background: var(--primary);
-        }
+        .hotel-marker { background: var(--primary); }
 
         .small-accent-pin {
-            background-color: var(--tertiary);
-            border: 2px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 0 1.5px #2b3a4a, 0 3px 5px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .small-accent-pin:hover {
-            transform: scale(1.2);
+            background-color: var(--tertiary); border: 2px solid white;
+            border-radius: 50%; box-shadow: 0 0 0 1.5px #2b3a4a, 0 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer; transition: transform 0.2s ease;
         }
 
         .leaflet-tooltip.custom-map-tooltip {
-            background-color: white;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            color: #333;
-            font-weight: 600;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            background-color: white; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            color: #333; font-weight: 600; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;
         }
 
         @media (max-width: 900px) {
             .main-content { flex-direction: column; overflow: auto; }
-            .map-pane { flex: none; height: 40vh; border-right: none; border-bottom: 2px solid var(--border-color); }
-            .itinerary-pane { flex: none; max-width: 100%; height: auto; overflow: visible; padding: 1rem; }
+            .map-pane { flex: none; height: 35vh; border-right: none; border-bottom: 2px solid var(--border-color); }
+            .itinerary-pane { flex: none; max-width: 100%; height: auto; padding: 1rem; }
             body, html { overflow: auto; }
         }
     </style>
@@ -275,8 +144,8 @@
     <div class="app-container">
         <header>
             <div>
-                <h1>Roma, Itália</h1>
-                <p>A Cidade Eterna • 4 a 9 de Abril</p>
+                <h1>Roma: Versão Atualizada (Débora)</h1>
+                <p>4 a 9 de Abril • 5 Noites</p>
             </div>
             <div>
                 <p>👨‍👩‍👦 Maurício, Débora e Daniel</p>
@@ -284,103 +153,111 @@
         </header>
 
         <div class="main-content">
-            <!-- PAINEL ESQUERDO: MAPA -->
             <div class="map-pane">
                 <div id="map"></div>
-                <button id="reset-btn" class="reset-view-btn" onclick="resetMapView()" title="Voltar a ver o roteiro completo">
-                    🗺️ Mostrar Tudo
+                <button id="reset-btn" class="reset-view-btn" onclick="resetMapView()">
+                    🗺️ Ver Tudo
                 </button>
             </div>
 
-            <!-- PAINEL DIREITO: ROTEIRO -->
             <div class="itinerary-pane" id="itinerary">
                 
                 <div class="base-card">
-                    <p style="margin-top:0; color:#64748b; font-style:italic;">
-                        Dica: Roma é um "museu a céu aberto". Agrupei as visitas por zonas para optimizar o tempo. Débora, prepare-se para Bernini e Miguel Ângelo; Daniel, prepare-se para os gladiadores e passagens secretas!
+                    <p style="margin-top:0; color:#64748b; font-size:0.85rem; font-style:italic;">
+                        Roteiro atualizado com base no documento Wanderlog da Débora. Alojamento na <strong>Via Gregorio Ricci Curbastro, 34</strong>.
                     </p>
                 </div>
 
-                <!-- DIA 1 E 2: O CORAÇÃO HISTÓRICO -->
+                <!-- DIA 1: CHEGADA -->
                 <div class="base-card">
                     <div class="base-header">
-                        <h2>🏛️ Dias 1 e 2: Roma Imperial</h2>
-                        <button class="fly-btn" onclick="flyToMap(41.8950, 12.4830, 14)">Ver Zona</button>
+                        <h2>🏛️ Sáb, 4 Abr: Chegada & Centro</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.9000, 12.4800, 15)">Mapa</button>
                     </div>
-                    
                     <div class="day-block">
-                        <div class="day-title">Dia 1 (4 Abr): Chegada & Centro <a href="https://www.google.com/maps/search/?api=1&query=Trevi+Fountain+Rome" target="_blank" class="map-link">📍 Maps</a></div>
                         <ul class="place-list">
-                            <li>Check-in e primeira imersão no centro barroco.</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 16)">Fontana di Trevi:</strong> A tradição da moeda para garantir o regresso.</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 16)">Pantheon:</strong> Obra-prima arquitectónica que a Débora vai adorar.</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 16)">Piazza Navona:</strong> Fontes de Bernini e ambiente vibrante para o Daniel.</li>
-                        </ul>
-                    </div>
-
-                    <div class="day-block">
-                        <div class="day-title">Dia 2 (5 Abr): Antiguidade <a href="https://www.google.com/maps/search/?api=1&query=Colosseum+Rome" target="_blank" class="map-link">📍 Maps</a></div>
-                        <ul class="place-list">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 16)">Coliseu:</strong> Onde a história ganha vida para o Daniel.</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8925, 12.4853, 16)">Fórum Romano & Palatino:</strong> O epicentro do Império.</li>
+                            <li>14:35 - Chegada ao Aeroporto Fiumicino (Ryanair FR #197).</li>
+                            <li>Check-in no alojamento.</li>
+                            <li>Passeio pelo Centro: <strong class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</strong>, <strong class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</strong>, <strong class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Fontana di Trevi</strong> e <strong class="clickable-place" onclick="flyToMap(41.9059, 12.4827, 17)">Spanish Steps</strong>.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- DIA 3: VATICANO -->
+                <!-- DIA 2: APPIA ANTICA -->
                 <div class="base-card">
                     <div class="base-header">
-                        <h2>🎨 Dia 3: Vaticano & Castelo</h2>
-                        <button class="fly-btn" onclick="flyToMap(41.9040, 12.4530, 15)">Ver Zona</button>
+                        <h2>🌳 Dom, 5 Abr: Via Appia Antica</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.8500, 12.5200, 13)">Mapa</button>
                     </div>
-
                     <div class="day-block">
-                        <div class="day-title">Dia 3 (6 Abr): Arte Sacra <a href="https://www.google.com/maps/search/?api=1&query=Vatican+Museums+Rome" target="_blank" class="map-link">📍 Maps</a></div>
                         <ul class="place-list">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.9065, 12.4536, 16)">Museus do Vaticano:</strong> Capela Sistina (O ponto alto para a Débora).</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.9022, 12.4539, 16)">Basílica de São Pedro:</strong> A grandiosidade do Renascimento.</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.9031, 12.4663, 16)">Castel Sant'Angelo:</strong> Muralhas e vistas incríveis.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8587, 12.5106, 16)">Catacombe di San Callisto</strong> (Exploração subterrânea).</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8675, 12.5125, 15)">Parco della Caffarella</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8525, 12.5204, 16)">Mausoleum of Cecilia Metella</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8306, 12.5615, 15)">Villa dei Quintili</strong> (Arqueologia).</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- DIA 4: ARTE E BOÉMIA -->
+                <!-- DIA 3: OSTIA ANTICA -->
                 <div class="base-card">
                     <div class="base-header">
-                        <h2>🌳 Dia 4: Borghese & Trastevere</h2>
-                        <button class="fly-btn" onclick="flyToMap(41.9010, 12.4800, 13)">Ver Zona</button>
+                        <h2>🚆 Seg, 6 Abr: Trastevere & Ostia</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.8000, 12.3500, 11)">Mapa</button>
                     </div>
-
                     <div class="day-block">
-                        <div class="day-title">Dia 4 (7 Abr): O Melhor de Bernini <a href="https://www.google.com/maps/search/?api=1&query=Galleria+Borghese+Rome" target="_blank" class="map-link">📍 Maps</a></div>
                         <ul class="place-list">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.9142, 12.4921, 16)">Galleria Borghese:</strong> Esculturas que parecem ganhar vida.</li>
-                            <li>Passeio pelos jardins da Villa Borghese (Daniel pode correr à vontade).</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8896, 12.4698, 16)">Trastevere:</strong> O bairro mais autêntico para o jantar da família.</li>
+                            <li>Pequeno-almoço no <strong class="clickable-place" onclick="flyToMap(41.8864, 12.4695, 17)">Le Levain Roma</strong>.</li>
+                            <li>Almoço rápido: <strong class="clickable-place" onclick="flyToMap(41.8789, 12.4769, 17)">Mordi & Vai</strong>.</li>
+                            <li>Tarde: <strong class="clickable-place" onclick="flyToMap(41.7558, 12.2921, 15)">Ostia Antica</strong> (A Pompeia de Roma).</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- DIA 5 E 6: SUBTERRÂNEO E PARTIDA -->
+                <!-- DIA 4: IMPERIAL -->
                 <div class="base-card">
                     <div class="base-header">
-                        <h2>✈️ Dias 5 e 6: Despedida</h2>
-                        <button class="fly-btn" onclick="flyToMap(41.8587, 12.5106, 13)">Ver Zona</button>
+                        <h2>🏟️ Ter, 7 Abr: Roma Imperial</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.8900, 12.4900, 15)">Mapa</button>
                     </div>
-
                     <div class="day-block">
-                        <div class="day-title">Dia 5 (8 Abr): Mistérios <a href="https://www.google.com/maps/search/?api=1&query=Catacombs+of+Saint+Callixtus+Rome" target="_blank" class="map-link">📍 Maps</a></div>
                         <ul class="place-list">
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8587, 12.5106, 16)">Catacumbas de São Calisto:</strong> Uma aventura subterrânea que o Daniel nunca esquecerá.</li>
-                            <li><strong class="clickable-place" onclick="flyToMap(41.8956, 12.4722, 16)">Campo de' Fiori:</strong> Mercado tradicional de manhã.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Coliseu</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8892, 12.4875, 16)">Palatine Hill</strong> & <strong class="clickable-place" onclick="flyToMap(41.8860, 12.4853, 16)">Circus Maximus</strong>.</li>
+                            <li>Lanche/Jantar: <strong class="clickable-place" onclick="flyToMap(41.8918, 12.4716, 17)">Suppli Roma</strong>.</li>
                         </ul>
                     </div>
+                </div>
 
+                <!-- DIA 5: VATICANO -->
+                <div class="base-card">
+                    <div class="base-header">
+                        <h2>⛪ Qua, 8 Abr: Vaticano</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.9040, 12.4530, 15)">Mapa</button>
+                    </div>
                     <div class="day-block">
-                        <div class="day-title">Dia 6 (9 Abr): Arrivederci! <a href="https://www.google.com/maps/search/?api=1&query=Rome+Fiumicino+Airport" target="_blank" class="map-link">📍 Maps</a></div>
                         <ul class="place-list">
-                            <li>Última volta pela <strong class="clickable-place" onclick="flyToMap(41.9107, 12.4764, 16)">Piazza del Popolo</strong>.</li>
-                            <li>Voo de regresso via Fiumicino.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.9022, 12.4539, 17)">Basílica de São Pedro</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.9065, 12.4536, 17)">Museus do Vaticano</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.9031, 12.4663, 17)">Castel Sant'Angelo</strong> ao pôr do sol.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- DIA 6: CAPITÓLIO & PARTIDA -->
+                <div class="base-card">
+                    <div class="base-header">
+                        <h2>🛡️ Qui, 9 Abr: Capitólio & Regresso</h2>
+                        <button class="fly-btn" onclick="flyToMap(41.8930, 12.4800, 16)">Mapa</button>
+                    </div>
+                    <div class="day-block">
+                        <ul class="place-list">
+                            <li>Café no <strong class="clickable-place" onclick="flyToMap(41.8981, 12.4764, 18)">Sant' Eustachio Caffè</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8992, 12.4735, 17)">Stadium of Domitian</strong>.</li>
+                            <li>Gueto Judeu: <strong class="clickable-place" onclick="flyToMap(41.8925, 12.4776, 18)">Boccione</strong>.</li>
+                            <li><strong class="clickable-place" onclick="flyToMap(41.8919, 12.4798, 17)">Teatro di Marcello</strong>.</li>
+                            <li>Área Capitolina: <strong class="clickable-place" onclick="flyToMap(41.8930, 12.4842, 17)">Lupa Capitolina</strong> & Palazzo Nuovo.</li>
+                            <li>19:35 - Voo de regresso (Ryanair FR 9903).</li>
                         </ul>
                     </div>
                 </div>
@@ -395,83 +272,72 @@
         let isResetting = false;
 
         document.addEventListener('DOMContentLoaded', () => {
-            map = L.map('map', {
-                zoomControl: true,
-                scrollWheelZoom: true
-            }).setView([41.895, 12.485], 13);
+            map = L.map('map', { zoomControl: true }).setView([41.895, 12.485], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
+                attribution: '&copy; OSM'
             }).addTo(map);
 
-            const iconAirport = L.divIcon({ className: 'custom-marker airport-marker', html: '✈️', iconSize: [28, 28] });
-            const iconBase = L.divIcon({ className: 'custom-marker', html: '🏨', iconSize: [28, 28] });
-            const iconRedPin = L.divIcon({ className: 'small-accent-pin', html: '', iconSize: [14, 14], iconAnchor: [7, 7] });
+            const hotelIcon = L.divIcon({ className: 'custom-marker hotel-marker', html: '🏨', iconSize: [28, 28] });
+            const pinIcon = L.divIcon({ className: 'small-accent-pin', html: '', iconSize: [12, 12], iconAnchor: [6, 6] });
 
-            const coordsFiumicino = [41.7999, 12.2462];
-            const coordsCentro = [41.9028, 12.4964];
-
-            L.marker(coordsFiumicino, { icon: iconAirport }).addTo(map).bindPopup("<b>Aeroporto Fiumicino</b>");
-            L.marker(coordsCentro, { icon: iconBase }).addTo(map).bindPopup("<b>Base em Roma</b>");
+            const hotelPos = [41.8687, 12.4646];
+            L.marker(hotelPos, { icon: hotelIcon }).addTo(map).bindPopup("<b>Alojamento</b><br>Via Gregorio Ricci Curbastro, 34");
 
             const places = [
-                { name: "Fontana di Trevi", pos: [41.9009, 12.4833], url: "https://www.google.com/maps/search/?api=1&query=Trevi+Fountain+Rome" },
-                { name: "Pantheon", pos: [41.8986, 12.4769], url: "https://www.google.com/maps/search/?api=1&query=Pantheon+Rome" },
-                { name: "Piazza Navona", pos: [41.8992, 12.4731], url: "https://www.google.com/maps/search/?api=1&query=Piazza+Navona+Rome" },
-                { name: "Coliseu", pos: [41.8902, 12.4922], url: "https://www.google.com/maps/search/?api=1&query=Colosseum+Rome" },
-                { name: "Fórum Romano", pos: [41.8925, 12.4853], url: "https://www.google.com/maps/search/?api=1&query=Roman+Forum+Rome" },
-                { name: "Museus do Vaticano", pos: [41.9065, 12.4536], url: "https://www.google.com/maps/search/?api=1&query=Vatican+Museums+Rome" },
-                { name: "Basílica de São Pedro", pos: [41.9022, 12.4539], url: "https://www.google.com/maps/search/?api=1&query=St.+Peter's+Basilica+Rome" },
-                { name: "Castel Sant'Angelo", pos: [41.9031, 12.4663], url: "https://www.google.com/maps/search/?api=1&query=Castel+Sant'Angelo+Rome" },
-                { name: "Galleria Borghese", pos: [41.9142, 12.4921], url: "https://www.google.com/maps/search/?api=1&query=Galleria+Borghese+Rome" },
-                { name: "Trastevere", pos: [41.8896, 12.4698], url: "https://www.google.com/maps/search/?api=1&query=Santa+Maria+in+Trastevere+Rome" },
-                { name: "Catacumbas de São Calisto", pos: [41.8587, 12.5106], url: "https://www.google.com/maps/search/?api=1&query=Catacombs+of+Saint+Callixtus+Rome" },
-                { name: "Piazza del Popolo", pos: [41.9107, 12.4764], url: "https://www.google.com/maps/search/?api=1&query=Piazza+del+Popolo+Rome" }
+                { name: "Pantheon", pos: [41.8986, 12.4769] },
+                { name: "Piazza Navona", pos: [41.8992, 12.4731] },
+                { name: "Trevi Fountain", pos: [41.9009, 12.4833] },
+                { name: "Spanish Steps", pos: [41.9059, 12.4827] },
+                { name: "Catacombe di San Callisto", pos: [41.8587, 12.5106] },
+                { name: "Parco della Caffarella", pos: [41.8675, 12.5125] },
+                { name: "Cecilia Metella", pos: [41.8525, 12.5204] },
+                { name: "Villa dei Quintili", pos: [41.8306, 12.5615] },
+                { name: "Le Levain Roma", pos: [41.8864, 12.4695] },
+                { name: "Mordi & Vai", pos: [41.8789, 12.4769] },
+                { name: "Ostia Antica", pos: [41.7558, 12.2921] },
+                { name: "Colosseum", pos: [41.8902, 12.4922] },
+                { name: "Palatine Hill", pos: [41.8892, 12.4875] },
+                { name: "Circus Maximus", pos: [41.8860, 12.4853] },
+                { name: "Suppli Roma", pos: [41.8918, 12.4716] },
+                { name: "Vatican Museums", pos: [41.9065, 12.4536] },
+                { name: "St. Peter's Basilica", pos: [41.9022, 12.4539] },
+                { name: "Castel Sant'Angelo", pos: [41.9031, 12.4663] },
+                { name: "Sant' Eustachio Caffè", pos: [41.8981, 12.4764] },
+                { name: "Stadium of Domitian", pos: [41.8992, 12.4735] },
+                { name: "Boccione", pos: [41.8925, 12.4776] },
+                { name: "Teatro di Marcello", pos: [41.8919, 12.4798] },
+                { name: "Lupa Capitolina", pos: [41.8930, 12.4842] }
             ];
 
-            places.forEach(place => {
-                const marker = L.marker(place.pos, { icon: iconRedPin })
-                 .addTo(map)
-                 .bindTooltip(`<span>${place.name}</span>`, { 
-                     direction: 'top', 
-                     offset: [0, -5],
-                     className: 'custom-map-tooltip'
-                 });
-                 
-                marker.on('click', () => { window.open(place.url, '_blank'); });
+            places.forEach(p => {
+                const marker = L.marker(p.pos, { icon: pinIcon }).addTo(map)
+                    .bindTooltip(p.name, { direction: 'top', className: 'custom-map-tooltip' });
+                marker.on('click', () => {
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}+Rome`, '_blank');
+                });
             });
 
-            const centralPlaces = places.map(p => p.pos);
-            routeBounds = L.latLngBounds(centralPlaces);
-
+            routeBounds = L.latLngBounds(places.map(p => p.pos));
             isResetting = true;
-            map.fitBounds(routeBounds, { padding: [30, 30] });
-            
-            map.on('moveend', () => {
-                const resetBtn = document.getElementById('reset-btn');
-                if (!isResetting) {
-                    resetBtn.classList.add('visible');
-                } else {
-                    isResetting = false;
-                }
-            });
+            map.fitBounds(routeBounds, { padding: [40, 40] });
 
-            setTimeout(() => { map.invalidateSize(); }, 500);
+            map.on('moveend', () => {
+                const btn = document.getElementById('reset-btn');
+                if (!isResetting) btn.classList.add('visible');
+                else isResetting = false;
+            });
         });
 
-        function flyToMap(lat, lng, zoomLevel) {
-            if(map) {
-                isResetting = false; 
-                map.flyTo([lat, lng], zoomLevel || 14, { duration: 1.5 });
-            }
+        function flyToMap(lat, lng, zoom) {
+            isResetting = false;
+            map.flyTo([lat, lng], zoom || 15, { duration: 1.5 });
         }
 
         function resetMapView() {
-            if (map && routeBounds) {
-                document.getElementById('reset-btn').classList.remove('visible');
-                isResetting = true;
-                map.flyToBounds(routeBounds, { padding: [30, 30], duration: 1.5 });
-            }
+            document.getElementById('reset-btn').classList.remove('visible');
+            isResetting = true;
+            map.flyToBounds(routeBounds, { padding: [40, 40], duration: 1.5 });
         }
     </script>
 </body>
