@@ -39,7 +39,6 @@
 
         .main-content { display: flex; flex: 1; overflow: hidden; }
 
-        /* PAINEL ESQUERDO: Mapa + Logística (Scroll) */
         .left-pane {
             flex: 1.5; display: flex; flex-direction: column;
             height: 100%; border-right: 2px solid #dce1e6;
@@ -53,7 +52,6 @@
         }
         #map { width: 100%; height: 100%; z-index: 1; }
 
-        /* DASHBOARD DE LOGÍSTICA */
         .logistics-dashboard {
             padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem; background: #edf2f7;
@@ -74,7 +72,6 @@
         .logistics-detail label { display: block; font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; }
         .logistics-detail span { display: block; font-size: 0.95rem; font-weight: 600; color: var(--primary); }
 
-        /* PAINEL DIREITO: Itinerário */
         .itinerary-pane {
             flex: 1; max-width: 550px; height: 100%;
             overflow-y: auto; background-color: var(--bg-light);
@@ -98,11 +95,9 @@
             font-weight: bold; margin-right: 8px; display: inline-block;
         }
 
-        /* Checkbox Toggle */
         .toggle-container { display: flex; align-items: center; cursor: pointer; }
         .toggle-container input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary); }
 
-        /* Estilo Tooltip */
         .custom-map-tooltip {
             background-color: white !important; border: 1px solid var(--primary) !important;
             color: var(--primary) !important; padding: 8px 12px !important;
@@ -120,7 +115,6 @@
             box-shadow: 0 3px 8px rgba(0,0,0,0.3); transition: transform 0.2s;
         }
 
-        /* Botões do Mapa */
         .map-control-btn {
             position: absolute; top: 12px; z-index: 9999;
             background: var(--primary); color: white; border: none;
@@ -147,7 +141,6 @@
             text-decoration: none; font-weight: bold; display: inline-block; margin-top: 8px;
         }
 
-        /* Restaurantes */
         .resto-category { font-weight: 800; color: var(--tertiary); margin-top: 1.5rem; margin-bottom: 0.5rem; text-transform: uppercase; border-bottom: 2px solid var(--tertiary); display: inline-block; }
         .resto-item { margin-bottom: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
         .tag-famous { color: #be123c; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; background: #fff1f2; padding: 1px 4px; border-radius: 4px; margin-right: 4px; }
@@ -172,7 +165,7 @@
                 <p class="text-xs text-slate-400">Maurício, Débora e Daniel • 4 a 9 de Abril</p>
             </div>
             <div class="hidden md:block text-right">
-                <span class="text-xs font-bold bg-tertiary px-2 py-1 rounded">Logística & Gastronomia Master</span>
+                <span class="text-xs font-bold bg-tertiary px-2 py-1 rounded">Versão Master: Gastronomia & Logística</span>
             </div>
         </header>
 
@@ -187,6 +180,7 @@
 
                 <!-- CENTRAL DE LOGÍSTICA (Abaixo da Dobra) -->
                 <div class="logistics-dashboard">
+                    <!-- CARTÃO VOOS -->
                     <div class="logistics-card" style="border-top: 4px solid var(--secondary);">
                         <h3>✈️ Voos Ryanair</h3>
                         <div class="logistics-detail">
@@ -213,7 +207,7 @@
                         </div>
                         <div class="logistics-detail">
                             <label>Morada & Navegação</label>
-                            <span>Via G. Ricci Curbastro, 34 / Scala B2</span>
+                            <span>Via Gregorio Ricci Curbastro, 34 / Scala B2</span>
                             <a href="https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy" target="_blank" class="map-link">📍 Abrir Google Maps</a>
                         </div>
                         <div class="logistics-detail">
@@ -251,7 +245,7 @@
                     <ul class="text-sm space-y-3">
                         <li><span class="time-badge">14:35</span> Chegada ao FCO. Transfer para Airbnb.</li>
                         <li>🏠 <strong>Airbnb:</strong> Via G. Ricci Curbastro, 34/b2.</li>
-                        <li>🚶 <strong>Caminhada:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span>.</li>
+                        <li>🚶 <strong>Centro:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span>.</li>
                     </ul>
                 </div>
 
@@ -335,24 +329,75 @@
                     </ul>
                 </div>
 
-                <!-- GUIA GASTRONÓMICO COMPLETO -->
+                <!-- GUIA GASTRONÓMICO COMPLETO RECURSIVO -->
                 <div class="base-card" style="border-left: 5px solid var(--success);">
                     <div class="base-header">
                         <h2 class="font-bold text-green-800">🍴 Guia Gastronómico</h2>
                         <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility('resto', this.checked)"></label>
                     </div>
                     <div class="text-sm">
-                        <div class="resto-category">Snacks e Street Food</div>
-                        <div class="resto-item"><strong>Supplì al Telefono</strong><span class="dish-rec"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8972, 12.4674, 18)">Supplizio</span> | <span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9077, 12.4485, 18)">Bonci Pizzarium</span></span></div>
-                        <div class="resto-item"><strong>Pizza al Taglio</strong><span class="dish-rec"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8944, 12.4746, 18)">Antico Forno Roscioli</span></span></div>
-                        <div class="resto-item"><strong>Alcachofras (Carciofi)</strong><span class="dish-rec"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8927, 12.4776, 18)">Nonna Betta</span></span></div>
                         
-                        <div class="resto-category">Pratos Principais</div>
-                        <div class="resto-item"><strong>Massas (Carbonara/Cacio)</strong><span class="dish-rec"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8790, 12.4786, 18)">Felice a Testaccio</span> | <span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8942, 12.4741, 18)">Roscioli Salumeria</span></span></div>
-                        
-                        <div class="resto-category">Sobremesas</div>
-                        <div class="resto-item"><strong>Maritozzo</strong><span class="dish-rec"><span class="tag-alt">VIZINHO</span> <span class="clickable-place" onclick="flyToMap(41.8735, 12.4674, 18)">Il Maritozzaro</span> (perto do Airbnb)</span></div>
-                        <div class="resto-item"><strong>Tiramisù</strong><span class="dish-rec"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9056, 12.4795, 18)">Pompi</span> | <span class="tag-alt">Alt</span> <span class="clickable-place" onclick="flyToMap(41.8993, 12.4698, 18)">Two Sizes</span></span></div>
+                        <div class="resto-category">1. Snacks e Street Food</div>
+                        <div class="resto-item">
+                            <strong>Supplì al Telefono</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8972, 12.4674, 18)">Supplizio (Centro)</span></div>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9077, 12.4485, 18)">Bonci Pizzarium</span></div>
+                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8795, 12.4582, 18)">La Gatta Mangiona</span></div>
+                            <div class="mt-2"><span class="tag-alt">Rápida</span> <span class="clickable-place" onclick="flyToMap(41.8887, 12.4716, 18)">I Supplì (Trastevere)</span></div>
+                        </div>
+
+                        <div class="resto-item">
+                            <strong>Pizza al Taglio</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8944, 12.4746, 18)">Antico Forno Roscioli</span></div>
+                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8831, 12.4697, 18)">Frontoni dal 1921</span></div>
+                        </div>
+
+                        <div class="resto-item">
+                            <strong>Carciofi alla Giudía</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8927, 12.4776, 18)">Nonna Betta (Gueto)</span></div>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8926, 12.4782, 18)">Ristorante Piperno</span></div>
+                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8715, 12.4433, 18)">Trattoria Da Cesare</span></div>
+                        </div>
+
+                        <div class="resto-category">2. Pratos Principais</div>
+                        <div class="resto-item">
+                            <strong>Massas Romanas (Carbonara/Cacio e Pepe)</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8790, 12.4786, 18)">Felice a Testaccio</span></div>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8942, 12.4741, 18)">Roscioli Salumeria</span></div>
+                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8546, 12.4846, 18)">Trecca - Roma</span></div>
+                        </div>
+
+                        <div class="resto-item">
+                            <strong>Abbacchio a Scottadito (Cordeiro)</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8773, 12.4764, 18)">Checchino dal 1887</span></div>
+                            <div class="mt-2"><span class="tag-alt">Familiar</span> <span class="clickable-place" onclick="flyToMap(41.8744, 12.4841, 18)">Osteria Fratelli Mori</span></div>
+                            <div class="mt-2"><span class="tag-alt">Moderna</span> <span class="clickable-place" onclick="flyToMap(41.8732, 12.4831, 18)">Trattoria Pennestri</span></div>
+                        </div>
+
+                        <div class="resto-category">3. Sobremesas</div>
+                        <div class="resto-item">
+                            <strong>Maritozzo</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8947, 12.5028, 18)">Pasticceria Regoli</span></div>
+                            <div class="mt-2"><span class="tag-alt">VIZINHO</span> <span class="clickable-place" onclick="flyToMap(41.8735, 12.4674, 18)">Il Maritozzaro</span> <span class="dish-rec">(Muito perto da Curbastro)</span></div>
+                        </div>
+
+                        <div class="resto-item">
+                            <strong>Tiramisù</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9056, 12.4795, 18)">Pompi (Espanha)</span></div>
+                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8993, 12.4698, 18)">Two Sizes (Navona)</span></div>
+                        </div>
+
+                        <div class="resto-item">
+                            <strong>Gelato</strong>
+                            <div class="mt-2"><span class="tag-famous">O Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9015, 12.4781, 18)">Giolitti (Panteão)</span></div>
+                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8884, 12.4721, 18)">Otaleg (Trastevere)</span></div>
+                        </div>
+
+                        <div class="resto-item">
+                            <strong>Colomba Pasquale</strong>
+                            <div class="mt-2"><span class="tag-alt">Artesanal</span> <span class="clickable-place" onclick="flyToMap(41.9090, 12.4513, 18)">Forno Feliziani (Prati)</span></div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -367,13 +412,23 @@
         const markersByGroup = { 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 'resto': [] };
         const dayColors = { 4: "#c16622", 5: "#8b5cf6", 6: "#10b981", 7: "#ef4444", 8: "#f59e0b", 9: "#06b6d4" };
         const hotelPos = [41.8687, 12.4646];
+        const airbnbMapsUrl = "https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy";
 
         document.addEventListener('DOMContentLoaded', () => {
             map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([41.895, 12.485], 13);
+            map.on('focus', () => { map.scrollWheelZoom.enable(); });
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OSM' }).addTo(map);
 
-            L.marker(hotelPos, { icon: L.divIcon({ className: 'day-marker-pin', html: '<div style="background:#112a46; border-radius:50%; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; border:2px solid white;">🏠</div>', iconSize: [32, 32], iconAnchor: [16, 16] }) }).addTo(map).bindPopup("<b>Airbnb Roma</b>");
+            // Marcador Fixo: Airbnb
+            L.marker(hotelPos, { 
+                icon: L.divIcon({ 
+                    className: 'day-marker-pin', 
+                    html: '<div style="background:#112a46; border-radius:50%; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; border:2px solid white;">🏠</div>', 
+                    iconSize: [32, 32], iconAnchor: [16, 16]
+                }) 
+            }).addTo(map).bindPopup(`<b>Airbnb Roma</b><br>Via G. Ricci Curbastro, 34<br><a href="${airbnbMapsUrl}" target="_blank" style="color: #c16622; font-weight: bold;">Abrir Maps 📍</a>`);
 
+            // Atrações
             const places = [
                 { name: "Pantheon", pos: [41.8986, 12.4769], day: 4, cat: "Atração" },
                 { name: "Piazza Navona", pos: [41.8992, 12.4731], day: 4, cat: "Atração" },
@@ -390,20 +445,34 @@
                 { name: "Audiência Papal", pos: [41.9021, 12.4539], day: 8, cat: "Vaticano" },
                 { name: "Vatican Museums", pos: [41.9065, 12.4536], day: 8, cat: "Museu" },
                 { name: "Palazzo Nuovo", pos: [41.8938, 12.4829], day: 9, cat: "Capitólio" },
+                { name: "Tabularium", pos: [41.8927, 12.4836], day: 9, cat: "Capitólio" },
                 { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9, cat: "Atração" }
             ];
 
+            // Restaurantes
             const restaurants = [
-                { name: "Supplizio", pos: [41.8972, 12.4674], cat: "Merenda", dish: "Supplì clássico" },
-                { name: "Bonci Pizzarium", pos: [41.9077, 12.4485], cat: "Pizza", dish: "Pizza al taglio" },
-                { name: "Antico Forno Roscioli", pos: [41.8944, 12.4746], cat: "Pizza", dish: "Pizza Bianca" },
+                { name: "Supplizio", pos: [41.8972, 12.4674], cat: "Merenda", dish: "Supplì clássico ou Cacio e Pepe" },
+                { name: "Bonci Pizzarium", pos: [41.9077, 12.4485], cat: "Pizza", dish: "Pizza al taglio criativa" },
+                { name: "La Gatta Mangiona", pos: [41.8795, 12.4582], cat: "Pizza", dish: "Pizza e Supplì Gourmet" },
+                { name: "I Supplì", pos: [41.8887, 12.4716], cat: "Street Food", dish: "Supplì clássico" },
+                { name: "Antico Forno Roscioli", pos: [41.8944, 12.4746], cat: "Pizza", dish: "Pizza Bianca com Mortadela" },
+                { name: "Frontoni dal 1921", pos: [41.8831, 12.4697], cat: "Pizza", dish: "Pizza al taglio" },
                 { name: "Nonna Betta", pos: [41.8927, 12.4776], cat: "Judaico", dish: "Carciofi alla Giudía" },
+                { name: "Ristorante Piperno", pos: [41.8926, 12.4782], cat: "Judaico", dish: "Alcachofras fritas" },
+                { name: "Da Cesare al Casaletto", pos: [41.8715, 12.4433], cat: "Trattoria", dish: "Culinária romana" },
                 { name: "Felice a Testaccio", pos: [41.8790, 12.4786], cat: "Trattoria", dish: "Cacio e Pepe" },
                 { name: "Roscioli Salumeria", pos: [41.8942, 12.4741], cat: "Gastronomia", dish: "Carbonara" },
-                { name: "Il Maritozzaro", pos: [41.8735, 12.4674], cat: "Sobremesa", dish: "Maritozzo" },
+                { name: "Trecca - Roma", pos: [41.8546, 12.4846], cat: "Trattoria", dish: "Culinária moderna" },
+                { name: "Checchino dal 1887", pos: [41.8773, 12.4764], cat: "Histórico", dish: "Abbacchio a Scottadito" },
+                { name: "Osteria Fratelli Mori", pos: [41.8744, 12.4841], cat: "Trattoria", dish: "Cordeiro grelhado" },
+                { name: "Trattoria Pennestri", pos: [41.8732, 12.4831], cat: "Moderna", dish: "Massas e Carnes" },
+                { name: "Pasticceria Regoli", pos: [41.8947, 12.5028], cat: "Sobremesa", dish: "Maritozzo" },
+                { name: "Il Maritozzaro", pos: [41.8735, 12.4674], cat: "Sobremesa", dish: "Maritozzo com panna" },
                 { name: "Pompi", pos: [41.9056, 12.4795], cat: "Sobremesa", dish: "Tiramisù" },
                 { name: "Two Sizes", pos: [41.8993, 12.4698], cat: "Sobremesa", dish: "Tiramisù variado" },
-                { name: "Giolitti", pos: [41.9015, 12.4781], cat: "Gelato", dish: "Gelato clássico" }
+                { name: "Giolitti", pos: [41.9015, 12.4781], cat: "Gelato", dish: "Gelato clássico" },
+                { name: "Otaleg", pos: [41.8884, 12.4721], cat: "Gelato", dish: "Gelato artesanal" },
+                { name: "Forno Feliziani", pos: [41.9090, 12.4513], cat: "Padaria", dish: "Colomba Pasquale" }
             ];
 
             places.forEach(p => {
