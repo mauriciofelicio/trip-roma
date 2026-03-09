@@ -120,10 +120,32 @@
         
         .hotel-marker { background: var(--primary); }
 
-        .small-accent-pin {
-            background-color: var(--tertiary); border: 2px solid white;
-            border-radius: 50%; box-shadow: 0 0 0 1.5px #2b3a4a, 0 2px 4px rgba(0,0,0,0.3);
-            cursor: pointer; transition: transform 0.2s ease;
+        /* Estilo para os pinos numerados por dia */
+        .day-marker-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .day-marker-pin {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid white;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .day-marker-pin:hover {
+            transform: scale(1.2);
+            z-index: 1000 !important;
         }
 
         .leaflet-tooltip.custom-map-tooltip {
@@ -168,10 +190,10 @@
                     </p>
                 </div>
 
-                <!-- DIA 1: CHEGADA -->
-                <div class="base-card">
+                <!-- DIA 1: CHEGADA (COR: TERRACOTA) -->
+                <div class="base-card" style="border-left: 5px solid #c16622;">
                     <div class="base-header">
-                        <h2>🏛️ Sáb, 4 Abr: Chegada & Centro</h2>
+                        <h2 style="color: #c16622;">🏛️ Sáb, 4 Abr: Chegada & Centro</h2>
                         <button class="fly-btn" onclick="flyToMap(41.9000, 12.4800, 15)">Mapa</button>
                     </div>
                     <div class="day-block">
@@ -183,10 +205,10 @@
                     </div>
                 </div>
 
-                <!-- DIA 2: APPIA ANTICA -->
-                <div class="base-card">
+                <!-- DIA 2: APPIA ANTICA (COR: ESMERALDA) -->
+                <div class="base-card" style="border-left: 5px solid #10b981;">
                     <div class="base-header">
-                        <h2>🌳 Dom, 5 Abr: Via Appia Antica</h2>
+                        <h2 style="color: #10b981;">🌳 Dom, 5 Abr: Via Appia Antica</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8500, 12.5200, 13)">Mapa</button>
                     </div>
                     <div class="day-block">
@@ -199,10 +221,10 @@
                     </div>
                 </div>
 
-                <!-- DIA 3: OSTIA ANTICA -->
-                <div class="base-card">
+                <!-- DIA 3: OSTIA ANTICA (COR: VIOLETA) -->
+                <div class="base-card" style="border-left: 5px solid #8b5cf6;">
                     <div class="base-header">
-                        <h2>🚆 Seg, 6 Abr: Trastevere & Ostia</h2>
+                        <h2 style="color: #8b5cf6;">🚆 Seg, 6 Abr: Trastevere & Ostia</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8000, 12.3500, 11)">Mapa</button>
                     </div>
                     <div class="day-block">
@@ -214,10 +236,10 @@
                     </div>
                 </div>
 
-                <!-- DIA 4: IMPERIAL -->
-                <div class="base-card">
+                <!-- DIA 4: IMPERIAL (COR: VERMELHO) -->
+                <div class="base-card" style="border-left: 5px solid #ef4444;">
                     <div class="base-header">
-                        <h2>🏟️ Ter, 7 Abr: Roma Imperial</h2>
+                        <h2 style="color: #ef4444;">🏟️ Ter, 7 Abr: Roma Imperial</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8900, 12.4900, 15)">Mapa</button>
                     </div>
                     <div class="day-block">
@@ -229,10 +251,10 @@
                     </div>
                 </div>
 
-                <!-- DIA 5: VATICANO -->
-                <div class="base-card">
+                <!-- DIA 5: VATICANO (COR: ÂMBAR) -->
+                <div class="base-card" style="border-left: 5px solid #f59e0b;">
                     <div class="base-header">
-                        <h2>⛪ Qua, 8 Abr: Vaticano</h2>
+                        <h2 style="color: #f59e0b;">⛪ Qua, 8 Abr: Vaticano</h2>
                         <button class="fly-btn" onclick="flyToMap(41.9040, 12.4530, 15)">Mapa</button>
                     </div>
                     <div class="day-block">
@@ -244,10 +266,10 @@
                     </div>
                 </div>
 
-                <!-- DIA 6: CAPITÓLIO & PARTIDA -->
-                <div class="base-card">
+                <!-- DIA 6: CAPITÓLIO & PARTIDA (COR: CIANO) -->
+                <div class="base-card" style="border-left: 5px solid #06b6d4;">
                     <div class="base-header">
-                        <h2>🛡️ Qui, 9 Abr: Capitólio & Regresso</h2>
+                        <h2 style="color: #06b6d4;">🛡️ Qui, 9 Abr: Capitólio & Regresso</h2>
                         <button class="fly-btn" onclick="flyToMap(41.8930, 12.4800, 16)">Mapa</button>
                     </div>
                     <div class="day-block">
@@ -271,6 +293,15 @@
         let routeBounds;
         let isResetting = false;
 
+        const dayColors = {
+            4: "#c16622", // Terracota (Dia 4)
+            5: "#10b981", // Esmeralda (Dia 5)
+            6: "#8b5cf6", // Violeta (Dia 6)
+            7: "#ef4444", // Vermelho (Dia 7)
+            8: "#f59e0b", // Âmbar (Dia 8)
+            9: "#06b6d4"  // Ciano (Dia 9)
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             map = L.map('map', { zoomControl: true }).setView([41.895, 12.485], 13);
 
@@ -279,40 +310,48 @@
             }).addTo(map);
 
             const hotelIcon = L.divIcon({ className: 'custom-marker hotel-marker', html: '🏨', iconSize: [28, 28] });
-            const pinIcon = L.divIcon({ className: 'small-accent-pin', html: '', iconSize: [12, 12], iconAnchor: [6, 6] });
 
             const hotelPos = [41.8687, 12.4646];
             L.marker(hotelPos, { icon: hotelIcon }).addTo(map).bindPopup("<b>Alojamento</b><br>Via Gregorio Ricci Curbastro, 34");
 
             const places = [
-                { name: "Pantheon", pos: [41.8986, 12.4769] },
-                { name: "Piazza Navona", pos: [41.8992, 12.4731] },
-                { name: "Trevi Fountain", pos: [41.9009, 12.4833] },
-                { name: "Spanish Steps", pos: [41.9059, 12.4827] },
-                { name: "Catacombe di San Callisto", pos: [41.8587, 12.5106] },
-                { name: "Parco della Caffarella", pos: [41.8675, 12.5125] },
-                { name: "Cecilia Metella", pos: [41.8525, 12.5204] },
-                { name: "Villa dei Quintili", pos: [41.8306, 12.5615] },
-                { name: "Le Levain Roma", pos: [41.8864, 12.4695] },
-                { name: "Mordi & Vai", pos: [41.8789, 12.4769] },
-                { name: "Ostia Antica", pos: [41.7558, 12.2921] },
-                { name: "Colosseum", pos: [41.8902, 12.4922] },
-                { name: "Palatine Hill", pos: [41.8892, 12.4875] },
-                { name: "Circus Maximus", pos: [41.8860, 12.4853] },
-                { name: "Suppli Roma", pos: [41.8918, 12.4716] },
-                { name: "Vatican Museums", pos: [41.9065, 12.4536] },
-                { name: "St. Peter's Basilica", pos: [41.9022, 12.4539] },
-                { name: "Castel Sant'Angelo", pos: [41.9031, 12.4663] },
-                { name: "Sant' Eustachio Caffè", pos: [41.8981, 12.4764] },
-                { name: "Stadium of Domitian", pos: [41.8992, 12.4735] },
-                { name: "Boccione", pos: [41.8925, 12.4776] },
-                { name: "Teatro di Marcello", pos: [41.8919, 12.4798] },
-                { name: "Lupa Capitolina", pos: [41.8930, 12.4842] }
+                { name: "Pantheon", pos: [41.8986, 12.4769], day: 4 },
+                { name: "Piazza Navona", pos: [41.8992, 12.4731], day: 4 },
+                { name: "Trevi Fountain", pos: [41.9009, 12.4833], day: 4 },
+                { name: "Spanish Steps", pos: [41.9059, 12.4827], day: 4 },
+                { name: "Catacombe di San Callisto", pos: [41.8587, 12.5106], day: 5 },
+                { name: "Parco della Caffarella", pos: [41.8675, 12.5125], day: 5 },
+                { name: "Cecilia Metella", pos: [41.8525, 12.5204], day: 5 },
+                { name: "Villa dei Quintili", pos: [41.8306, 12.5615], day: 5 },
+                { name: "Le Levain Roma", pos: [41.8864, 12.4695], day: 6 },
+                { name: "Mordi & Vai", pos: [41.8789, 12.4769], day: 6 },
+                { name: "Ostia Antica", pos: [41.7558, 12.2921], day: 6 },
+                { name: "Colosseum", pos: [41.8902, 12.4922], day: 7 },
+                { name: "Palatine Hill", pos: [41.8892, 12.4875], day: 7 },
+                { name: "Circus Maximus", pos: [41.8860, 12.4853], day: 7 },
+                { name: "Suppli Roma", pos: [41.8918, 12.4716], day: 7 },
+                { name: "Vatican Museums", pos: [41.9065, 12.4536], day: 8 },
+                { name: "St. Peter's Basilica", pos: [41.9022, 12.4539], day: 8 },
+                { name: "Castel Sant'Angelo", pos: [41.9031, 12.4663], day: 8 },
+                { name: "Sant' Eustachio Caffè", pos: [41.8981, 12.4764], day: 9 },
+                { name: "Stadium of Domitian", pos: [41.8992, 12.4735], day: 9 },
+                { name: "Boccione", pos: [41.8925, 12.4776], day: 9 },
+                { name: "Teatro di Marcello", pos: [41.8919, 12.4798], day: 9 },
+                { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9 }
             ];
 
             places.forEach(p => {
-                const marker = L.marker(p.pos, { icon: pinIcon }).addTo(map)
+                const color = dayColors[p.day];
+                const customIcon = L.divIcon({
+                    className: 'day-marker-container',
+                    html: `<div class="day-marker-pin" style="background-color: ${color};">${p.day}</div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+
+                const marker = L.marker(p.pos, { icon: customIcon }).addTo(map)
                     .bindTooltip(p.name, { direction: 'top', className: 'custom-map-tooltip' });
+                
                 marker.on('click', () => {
                     window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}+Rome`, '_blank');
                 });
