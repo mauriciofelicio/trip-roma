@@ -9,14 +9,14 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <title>Roma 2026: Roteiro Oficial Débora</title>
+    <title>Roma 2026: Roteiro Consolidado Família Barbosa</title>
     
     <!-- Leaflet JS & CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root {
@@ -28,7 +28,7 @@
             --resto-pin: #64748b; 
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; overflow: hidden; }
         .app-container { display: flex; flex-direction: column; height: 100vh; }
 
         header {
@@ -39,7 +39,7 @@
 
         .main-content { display: flex; flex: 1; overflow: hidden; }
 
-        /* PAINEL ESQUERDO */
+        /* PAINEL ESQUERDO: Mapa + Logística (Scroll) */
         .left-pane {
             flex: 1.5; display: flex; flex-direction: column;
             height: 100%; border-right: 2px solid #dce1e6;
@@ -53,7 +53,7 @@
         }
         #map { width: 100%; height: 100%; z-index: 1; }
 
-        /* LOGÍSTICA */
+        /* DASHBOARD DE LOGÍSTICA */
         .logistics-dashboard {
             padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem; background: #edf2f7;
@@ -74,7 +74,7 @@
         .logistics-detail label { display: block; font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; }
         .logistics-detail span { display: block; font-size: 0.95rem; font-weight: 600; color: var(--primary); }
 
-        /* PAINEL DIREITO */
+        /* PAINEL DIREITO: Itinerário */
         .itinerary-pane {
             flex: 1; max-width: 550px; height: 100%;
             overflow-y: auto; background-color: var(--bg-light);
@@ -100,18 +100,14 @@
 
         /* Checkbox Toggle */
         .toggle-container { display: flex; align-items: center; cursor: pointer; }
-        .toggle-container input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary); }
+        .toggle-container input { cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary); }
 
-        /* Estilo Tooltip Customizado */
+        /* Estilo Tooltip */
         .custom-map-tooltip {
-            background-color: white !important;
-            border: 1px solid var(--primary) !important;
-            color: var(--primary) !important;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-            font-size: 0.85rem !important;
-            line-height: 1.4 !important;
+            background-color: white !important; border: 1px solid var(--primary) !important;
+            color: var(--primary) !important; padding: 10px 14px !important;
+            border-radius: 8px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            font-size: 0.85rem !important; line-height: 1.4 !important;
         }
         .tooltip-title { font-weight: 800; border-bottom: 1px solid #eee; margin-bottom: 4px; display: block; }
         .tooltip-cat { font-size: 0.7rem; text-transform: uppercase; color: #64748b; font-weight: bold; }
@@ -131,11 +127,9 @@
             background: var(--primary); color: white; border: none;
             padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s ease;
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.8rem;
+            display: flex; align-items: center; gap: 8px; font-size: 0.8rem;
         }
         .map-control-btn:hover { background: var(--secondary); transform: translateY(-1px); }
-        
         #reset-btn { left: 55px; }
         #center-btn { left: 165px; }
 
@@ -155,11 +149,11 @@
             text-decoration: none; font-weight: bold; display: inline-block; margin-top: 8px;
         }
 
-        /* Estilo Restaurantes na Janela */
-        .resto-category { font-weight: 800; color: var(--tertiary); margin-top: 1.5rem; margin-bottom: 0.5rem; text-transform: uppercase; border-bottom: 2px solid var(--tertiary); display: inline-block; }
-        .resto-item { margin-bottom: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-        .tag-famous { color: #be123c; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; background: #fff1f2; padding: 1px 4px; border-radius: 4px; margin-right: 4px; }
-        .tag-alt { color: #15803d; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; background: #f0fdf4; padding: 1px 4px; border-radius: 4px; margin-right: 4px; }
+        /* Restaurantes na Janela Lateral */
+        .resto-category { font-weight: 800; color: var(--tertiary); margin-top: 1.5rem; margin-bottom: 0.6rem; text-transform: uppercase; border-bottom: 2px solid var(--tertiary); display: inline-block; font-size: 0.75rem; }
+        .resto-item { margin-bottom: 1.2rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.6rem; }
+        .tag-famous { color: #be123c; font-weight: bold; font-size: 0.65rem; text-transform: uppercase; background: #fff1f2; padding: 2px 5px; border-radius: 4px; margin-right: 4px; }
+        .tag-alt { color: #15803d; font-weight: bold; font-size: 0.65rem; text-transform: uppercase; background: #f0fdf4; padding: 2px 5px; border-radius: 4px; margin-right: 4px; }
         .dish-rec { font-style: italic; color: #4b5563; font-size: 0.85rem; display: block; margin-top: 4px; }
 
         @media (max-width: 1000px) {
@@ -176,11 +170,11 @@
     <div class="app-container">
         <header>
             <div>
-                <h1 class="font-bold text-lg uppercase tracking-tight">Roma 2026: Roteiro Oficial Débora</h1>
+                <h1 class="font-bold text-lg uppercase tracking-tight">Roma 2026: Itinerário Consolidado</h1>
                 <p class="text-xs text-slate-400">Maurício, Débora e Daniel • 4 a 9 de Abril</p>
             </div>
             <div class="hidden md:block text-right">
-                <span class="text-xs font-bold bg-tertiary px-2 py-1 rounded text-white">Versão Master: Gastronomia & Logística</span>
+                <span class="text-xs font-bold bg-tertiary px-3 py-1 rounded text-white shadow-sm">Versão Master Definitiva</span>
             </div>
         </header>
 
@@ -195,9 +189,8 @@
 
                 <!-- CENTRAL DE LOGÍSTICA -->
                 <div class="logistics-dashboard">
-                    <!-- CARTÃO VOOS -->
                     <div class="logistics-card" style="border-top: 4px solid var(--secondary);">
-                        <h3>✈️ Voos Ryanair</h3>
+                        <h3>✈️ Logística Ryanair</h3>
                         <div class="logistics-detail">
                             <label>Reserva (PNR)</label>
                             <span class="font-mono font-bold text-indigo-700">MR5KHL</span>
@@ -205,34 +198,29 @@
                         <div class="logistics-detail">
                             <label>Ida (Sat 4 Apr)</label>
                             <span>LIS 10:35 ➔ FCO 14:35 | FR 8197</span>
-                            <span class="text-xs text-slate-500 font-bold">Assentos: 31D, 31E, 31F</span>
+                            <span class="text-xs text-slate-500 font-bold">LUG: 31D, 31E, 31F</span>
                         </div>
                         <div class="logistics-detail">
                             <label>Volta (Thu 9 Apr)</label>
                             <span>FCO 19:35 ➔ LIS 21:50 | FR 9903</span>
-                            <span class="text-xs text-slate-500 font-bold">Assentos: 30C, 30B, 30A</span>
+                            <span class="text-xs text-slate-500 font-bold">LUG: 30C, 30B, 30A</span>
                         </div>
                     </div>
 
-                    <!-- CARTÃO ALOJAMENTO -->
                     <div class="logistics-card" style="border-top: 4px solid var(--tertiary);">
-                        <h3>🏠 Airbnb Roma</h3>
-                        <div class="logistics-detail">
-                            <label>Reserva</label>
-                            <a href="https://www.airbnb.com/trips/v1/reservation-details/ro/RESERVATION2_CHECKIN/HMDTXE3ZFB" target="_blank" class="map-link text-indigo-600">📄 Detalhes HMDTXE3ZFB</a>
-                        </div>
+                        <h3>🏠 Alojamento Airbnb</h3>
                         <div class="logistics-detail">
                             <label>Morada & Navegação</label>
                             <span>Via Gregorio Ricci Curbastro, 34 / Scala B2</span>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy" target="_blank" class="map-link">📍 Abrir Google Maps</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Via+Gregorio+Ricci+Curbastro,+34,+00149+Roma+RM,+Italy" target="_blank" class="map-link">📍 Google Maps</a>
                         </div>
                         <div class="logistics-detail">
-                            <label>Anfitrião</label>
-                            <span>Emanuele (+39 338 540 5894)</span>
+                            <label>Reserva & Anfitrião</label>
+                            <a href="https://www.airbnb.com/trips/v1/reservation-details/ro/RESERVATION2_CHECKIN/HMDTXE3ZFB" target="_blank" class="text-indigo-600 underline text-xs font-bold">📄 HMDTXE3ZFB</a>
+                            <span class="block mt-1">Emanuele: +39 338 540 5894</span>
                         </div>
                     </div>
 
-                    <!-- CARTÃO PAPA -->
                     <div class="logistics-card" style="border-top: 4px solid #f59e0b;">
                         <h3>🇻🇦 Audiência Papal</h3>
                         <div class="logistics-detail">
@@ -241,7 +229,7 @@
                         </div>
                         <div class="logistics-detail">
                             <label>Recolha de Bilhetes</label>
-                            <span>Bronze Door (7 Abr 15h-19h ou 8 Abr 07:30)</span>
+                            <span>7 Abr (15h-19h) ou 8 Abr (07:30) na Bronze Door</span>
                         </div>
                     </div>
                 </div>
@@ -256,30 +244,25 @@
                         <h2 class="font-bold text-primary">🏛️ Sábado, 4 Abr: Chegada</h2>
                         <div class="flex items-center">
                             <button class="fly-btn" onclick="flyToMap(41.8986, 12.4769, 15)">Mapa</button>
-                            <label class="toggle-container" title="Mostrar/Ocultar no mapa">
-                                <input type="checkbox" checked onchange="toggleDayVisibility(4, this.checked)">
-                            </label>
+                            <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility(4, this.checked)"></label>
                         </div>
                     </div>
                     <ul class="text-sm space-y-3">
-                        <li><span class="time-badge">14:35</span> Chegada ao FCO. Transfer para Airbnb.</li>
-                        <li>🏠 <strong>Airbnb:</strong> Via G. Ricci Curbastro, 34/b2.</li>
-                        <li>🚶 <strong>Centro:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span>.</li>
+                        <li><span class="time-badge">14:35</span> Chegada ao FCO. Transfer para o Airbnb.</li>
+                        <li>🚶 <strong>Caminhada:</strong> <span class="clickable-place" onclick="flyToMap(41.8986, 12.4769, 17)">Pantheon</span>, <span class="clickable-place" onclick="flyToMap(41.8992, 12.4731, 17)">Piazza Navona</span>, <span class="clickable-place" onclick="flyToMap(41.9009, 12.4833, 17)">Trevi Fountain</span> e <span class="clickable-place" onclick="flyToMap(41.9059, 12.4827, 17)">Spanish Steps</span>.</li>
                     </ul>
                 </div>
 
                 <!-- DIA 5 -->
                 <div class="base-card" style="border-left: 5px solid #8b5cf6;">
                     <div class="base-header">
-                        <h2 class="font-bold text-violet-700">🚆 Domingo, 5 Abr: Ostia Antica</h2>
+                        <h2 class="font-bold text-violet-700">🚆 Domingo, 5 Abr: Porto Antigo</h2>
                         <div class="flex items-center">
                             <button class="fly-btn" onclick="flyToMap(41.7558, 12.2921, 12)">Mapa</button>
-                            <label class="toggle-container">
-                                <input type="checkbox" checked onchange="toggleDayVisibility(5, this.checked)">
-                            </label>
+                            <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility(5, this.checked)"></label>
                         </div>
                     </div>
-                    <p class="text-sm">🏺 <span class="clickable-place" onclick="flyToMap(41.7558, 12.2921, 16)">Ostia Antica</span>: Porto antigo de Roma (fechada à segunda).</p>
+                    <p class="text-sm">🏺 <span class="clickable-place" onclick="flyToMap(41.7558, 12.2921, 16)">Ostia Antica</span>: Exploração arqueológica do antigo porto imperial.</p>
                 </div>
 
                 <!-- DIA 6 -->
@@ -288,16 +271,13 @@
                         <h2 class="font-bold text-emerald-700">🌳 Segunda, 6 Abr: Via Appia</h2>
                         <div class="flex items-center">
                             <button class="fly-btn" onclick="flyToMap(41.8500, 12.5200, 13)">Mapa</button>
-                            <label class="toggle-container">
-                                <input type="checkbox" checked onchange="toggleDayVisibility(6, this.checked)">
-                            </label>
+                            <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility(6, this.checked)"></label>
                         </div>
                     </div>
                     <ul class="text-sm space-y-3">
                         <li>🥐 <span class="clickable-place" onclick="flyToMap(41.8864, 12.4695, 18)">Le Levain Roma</span>.</li>
-                        <li>sandwich <span class="clickable-place" onclick="flyToMap(41.8789, 12.4769, 18)">Mordi & Vai</span>.</li>
                         <li>💀 <span class="clickable-place" onclick="flyToMap(41.8587, 12.5106, 16)">Catacombe di San Callisto</span>.</li>
-                        <li>🏰 <span class="clickable-place" onclick="flyToMap(41.8306, 12.5615, 15)">Villa dei Quintili</span>.</li>
+                        <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8525, 12.5204, 16)">Mausoleum of Cecilia Metella</span> e <span class="clickable-place" onclick="flyToMap(41.8306, 12.5615, 15)">Villa dei Quintili</span>.</li>
                     </ul>
                 </div>
 
@@ -307,17 +287,17 @@
                         <h2 class="font-bold text-red-700">🏟️ Terça, 7 Abr: Roma Imperial</h2>
                         <div class="flex items-center">
                             <button class="fly-btn" onclick="flyToMap(41.8902, 12.4922, 16)">Mapa</button>
-                            <label class="toggle-container">
-                                <input type="checkbox" checked onchange="toggleDayVisibility(7, this.checked)">
-                            </label>
+                            <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility(7, this.checked)"></label>
                         </div>
                     </div>
                     <ul class="text-sm space-y-3">
-                        <li class="p-3 bg-red-50 rounded border border-red-200">
-                            <span class="time-badge">08:30</span> <strong>Visita Guiada Coliseu</strong>
-                            <a href="https://www.airbnb.com/trips/v1/reservation-details/ro/EXPERIENCE_RESERVATION/TA42WEWJ" target="_blank" class="text-indigo-600 underline text-xs font-bold mt-1 block italic">ID: TA42WEWJ (Guarda-chuva Laranja)</a>
+                        <li class="p-3 bg-red-50 rounded border border-red-200 shadow-sm">
+                            <span class="time-badge">08:30</span> <strong>Visita Guiada Coliseu/Fórum</strong>
+                            <a href="https://www.airbnb.com/trips/v1/reservation-details/ro/EXPERIENCE_RESERVATION/TA42WEWJ" target="_blank" class="text-indigo-600 underline text-xs font-bold mt-1 block">ID: TA42WEWJ (Guarda-chuva Laranja)</a>
+                            <p class="mt-2 text-xs italic">Meeting Point: Arco de Constantino (Lado San Gregorio).</p>
                         </li>
-                        <li>🏟️ <span class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Colosseum</span>, Palatine e Circus Maximus.</li>
+                        <li>🏟️ <span class="clickable-place" onclick="flyToMap(41.8902, 12.4922, 17)">Colosseum</span>, <span class="clickable-place" onclick="flyToMap(41.8892, 12.4875, 17)">Palatine Hill</span> e <span class="clickable-place" onclick="flyToMap(41.8860, 12.4853, 17)">Circus Maximus</span>.</li>
+                        <li class="p-2 bg-slate-50 border rounded text-xs mt-2"><strong>Recolha Papa:</strong> 15:00-19:00 na <span class="font-bold clickable-place" onclick="flyToMap(41.9022, 12.4557, 18)">Bronze Door</span>.</li>
                     </ul>
                 </div>
 
@@ -327,14 +307,13 @@
                         <h2 class="font-bold text-amber-700">⛪ Quarta, 8 Abr: Vaticano</h2>
                         <div class="flex items-center">
                             <button class="fly-btn" onclick="flyToMap(41.9021, 12.4539, 16)">Mapa</button>
-                            <label class="toggle-container">
-                                <input type="checkbox" checked onchange="toggleDayVisibility(8, this.checked)">
-                            </label>
+                            <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility(8, this.checked)"></label>
                         </div>
                     </div>
                     <ul class="text-sm space-y-3">
                         <li>🇻🇦 <span class="time-badge">10:00</span> <strong>Audiência Papal</strong> (Piazza S. Pietro).</li>
-                        <li>🎨 <span class="clickable-place" onclick="flyToMap(41.9065, 12.4536, 17)">Vatican Museums</span> e Basílica.</li>
+                        <li>🎨 <span class="clickable-place" onclick="flyToMap(41.9065, 12.4536, 17)">Vatican Museums</span>, Capela Sistina e Basílica.</li>
+                        <li>🏰 <span class="clickable-place" onclick="flyToMap(41.9031, 12.4663, 17)">Castel Sant'Angelo</span>.</li>
                     </ul>
                 </div>
 
@@ -344,17 +323,15 @@
                         <h2 class="font-bold text-cyan-700">🛡️ Quinta, 9 Abr: Capitólio & Regresso</h2>
                         <div class="flex items-center">
                             <button class="fly-btn" onclick="flyToMap(41.8930, 12.4842, 17)">Mapa</button>
-                            <label class="toggle-container">
-                                <input type="checkbox" checked onchange="toggleDayVisibility(9, this.checked)">
-                            </label>
+                            <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility(9, this.checked)"></label>
                         </div>
                     </div>
                     <ul class="text-sm space-y-3">
                         <li>🏛️ <span class="clickable-place" onclick="flyToMap(41.8938, 12.4829, 18)">Palazzo Nuovo</span> e Tabularium.</li>
-                        <li class="p-3 bg-cyan-50 rounded border border-cyan-200 mt-4">
-                            <span class="time-badge">19:35</span> <strong>Voo de Regresso Ryanair FR 9903</strong>
-                            <p class="mt-1">Chegada a Lisboa (LIS) às 21:50.</p>
-                            <p class="text-xs font-bold text-cyan-800 uppercase">Lugares: 30A, 30B, 30C | PNR: MR5KHL</p>
+                        <li>🐺 <span class="clickable-place" onclick="flyToMap(41.8930, 12.4842, 18)">Lupa Capitolina</span>.</li>
+                        <li class="p-3 bg-cyan-50 rounded border border-cyan-200 mt-4 shadow-sm">
+                            <span class="time-badge">19:35</span> <strong>Voo de Regresso FR 9903</strong>
+                            <p class="text-xs font-bold text-cyan-800 uppercase mt-1">PNR: MR5KHL | Lugares: 30A, 30B, 30C</p>
                         </li>
                     </ul>
                 </div>
@@ -362,74 +339,44 @@
                 <!-- GUIA GASTRONÓMICO COMPLETO -->
                 <div class="base-card" style="border-left: 5px solid var(--success);">
                     <div class="base-header">
-                        <h2 class="font-bold text-green-800">🍴 Guia Gastronómico</h2>
-                        <label class="toggle-container">
-                            <input type="checkbox" checked onchange="toggleDayVisibility('resto', this.checked)">
-                        </label>
+                        <h2 class="font-bold text-green-800 uppercase text-xs tracking-widest">🍴 Guia Gastronómico</h2>
+                        <label class="toggle-container"><input type="checkbox" checked onchange="toggleDayVisibility('resto', this.checked)"></label>
                     </div>
                     <div class="text-sm">
-                        
-                        <div class="resto-category">1. Snacks e Street Food</div>
+                        <div class="resto-category">1. Snacks e Street Food (Merenda)</div>
                         <div class="resto-item">
                             <strong>Supplì al Telefono</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8972, 12.4674, 18)">Supplizio (Centro)</span></div>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9077, 12.4485, 18)">Bonci Pizzarium</span></div>
-                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8795, 12.4582, 18)">La Gatta Mangiona</span></div>
-                            <div class="mt-2"><span class="tag-alt">Rápida</span> <span class="clickable-place" onclick="flyToMap(41.8887, 12.4716, 18)">I Supplì (Trastevere)</span></div>
+                            <div class="mt-1"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8972, 12.4674, 18)">Supplizio</span> | <span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9077, 12.4485, 18)">Bonci Pizzarium</span></div>
+                            <div class="mt-1"><span class="tag-alt">Alt</span> <span class="clickable-place" onclick="flyToMap(41.8795, 12.4582, 18)">La Gatta Mangiona</span> | <span class="tag-alt">Rápida</span> <span class="clickable-place" onclick="flyToMap(41.8887, 12.4716, 18)">I Supplì (Trastevere)</span></div>
                         </div>
-
                         <div class="resto-item">
                             <strong>Pizza al Taglio</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8944, 12.4746, 18)">Antico Forno Roscioli</span></div>
-                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8831, 12.4697, 18)">Frontoni dal 1921</span></div>
+                            <div class="mt-1"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8944, 12.4746, 18)">Antico Forno Roscioli</span> | <span class="tag-alt">Alt</span> <span class="clickable-place" onclick="flyToMap(41.8831, 12.4697, 18)">Frontoni dal 1921</span></div>
                         </div>
-
                         <div class="resto-item">
-                            <strong>Carciofi alla Giudía</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8927, 12.4776, 18)">Nonna Betta (Gueto)</span></div>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8926, 12.4782, 18)">Ristorante Piperno</span></div>
-                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8715, 12.4433, 18)">Trattoria Da Cesare</span></div>
+                            <strong>Carciofi alla Giudía (Alcachofras)</strong>
+                            <div class="mt-1"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8927, 12.4776, 18)">Nonna Betta</span> | <span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8926, 12.4782, 18)">Piperno</span> | <span class="tag-alt">Alt</span> <span class="clickable-place" onclick="flyToMap(41.8715, 12.4433, 18)">Da Cesare</span></div>
                         </div>
 
                         <div class="resto-category">2. Pratos Principais</div>
                         <div class="resto-item">
-                            <strong>Massas Romanas (Carbonara/Cacio e Pepe)</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8790, 12.4786, 18)">Felice a Testaccio</span></div>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8942, 12.4741, 18)">Roscioli Salumeria</span></div>
-                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8546, 12.4846, 18)">Trecca - Roma</span></div>
+                            <strong>Massas Romanas</strong>
+                            <div class="mt-1"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8790, 12.4786, 18)">Felice a Testaccio</span> | <span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8942, 12.4741, 18)">Roscioli Salumeria</span> | <span class="tag-alt">Alt</span> <span class="clickable-place" onclick="flyToMap(41.8546, 12.4846, 18)">Trecca</span></div>
                         </div>
-
                         <div class="resto-item">
                             <strong>Abbacchio a Scottadito (Cordeiro)</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8773, 12.4764, 18)">Checchino dal 1887</span></div>
-                            <div class="mt-2"><span class="tag-alt">Familiar</span> <span class="clickable-place" onclick="flyToMap(41.8744, 12.4841, 18)">Osteria Fratelli Mori</span></div>
-                            <div class="mt-2"><span class="tag-alt">Moderna</span> <span class="clickable-place" onclick="flyToMap(41.8732, 12.4831, 18)">Trattoria Pennestri</span></div>
+                            <div class="mt-1"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8773, 12.4764, 18)">Checchino dal 1887</span> | <span class="tag-alt">Familiar</span> <span class="clickable-place" onclick="flyToMap(41.8744, 12.4841, 18)">Osteria Mori</span> | <span class="tag-alt">Alt</span> <span class="clickable-place" onclick="flyToMap(41.8732, 12.4831, 18)">Pennestri</span></div>
                         </div>
 
                         <div class="resto-category">3. Sobremesas</div>
                         <div class="resto-item">
                             <strong>Maritozzo</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8947, 12.5028, 18)">Pasticceria Regoli</span></div>
-                            <div class="mt-2"><span class="tag-alt">VIZINHO</span> <span class="clickable-place" onclick="flyToMap(41.8735, 12.4674, 18)">Il Maritozzaro</span> <span class="dish-rec">(Muito perto da Curbastro)</span></div>
+                            <div class="mt-1"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.8947, 12.5028, 18)">Regoli</span> | <span class="tag-alt">VIZINHO</span> <span class="clickable-place" onclick="flyToMap(41.8735, 12.4674, 18)">Il Maritozzaro</span> <span class="text-xs italic">(perto Airbnb)</span></div>
                         </div>
-
                         <div class="resto-item">
-                            <strong>Tiramisù</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9056, 12.4795, 18)">Pompi (Espanha)</span></div>
-                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8993, 12.4698, 18)">Two Sizes (Navona)</span></div>
+                            <strong>Tiramisù & Gelato</strong>
+                            <div class="mt-1"><span class="tag-famous">Pompi</span> | <span class="tag-alt">Two Sizes</span> | <span class="tag-famous">Giolitti</span> | <span class="tag-alt">Otaleg</span></div>
                         </div>
-
-                        <div class="resto-item">
-                            <strong>Gelato</strong>
-                            <div class="mt-2"><span class="tag-famous">Famoso</span> <span class="clickable-place" onclick="flyToMap(41.9015, 12.4781, 18)">Giolitti (Panteão)</span></div>
-                            <div class="mt-2"><span class="tag-alt">Alternativa</span> <span class="clickable-place" onclick="flyToMap(41.8884, 12.4721, 18)">Otaleg (Trastevere)</span></div>
-                        </div>
-
-                        <div class="resto-item">
-                            <strong>Colomba Pasquale</strong>
-                            <div class="mt-2"><span class="tag-alt">Artesanal</span> <span class="clickable-place" onclick="flyToMap(41.9090, 12.4513, 18)">Forno Feliziani (Prati)</span></div>
-                        </div>
-
                     </div>
                 </div>
 
@@ -439,8 +386,7 @@
 
     <script>
         let map;
-        let routeBounds;
-        let cityCenterBounds;
+        let routeBounds, cityCenterBounds;
         const markersByGroup = { 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 'resto': [] };
         const dayColors = { 4: "#c16622", 5: "#8b5cf6", 6: "#10b981", 7: "#ef4444", 8: "#f59e0b", 9: "#06b6d4" };
         const hotelPos = [41.8687, 12.4646];
@@ -451,82 +397,62 @@
             map.on('focus', () => { map.scrollWheelZoom.enable(); });
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OSM' }).addTo(map);
 
-            // Marcador Fixo: Airbnb
+            // Airbnb
             L.marker(hotelPos, { 
-                icon: L.divIcon({ 
-                    className: 'day-marker-pin', 
-                    html: '<div style="background:#112a46; border-radius:50%; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; border:2px solid white;">🏠</div>', 
-                    iconSize: [32, 32], iconAnchor: [16, 16]
-                }) 
-            }).addTo(map).bindPopup(`<b>Airbnb Roma</b><br>Via G. Ricci Curbastro, 34<br><a href="${airbnbMapsUrl}" target="_blank" style="color: #c16622; font-weight: bold;">Abrir Maps 📍</a>`)
-            .on('click', () => { window.open(airbnbMapsUrl, '_blank'); });
+                icon: L.divIcon({ className: 'day-marker-pin', html: '<div style="background:#112a46; border-radius:50%; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; border:2px solid white;">🏠</div>', iconSize: [32, 32], iconAnchor: [16, 16] }) 
+            }).addTo(map).bindPopup(`<b>Airbnb Roma</b><br>Via G. Ricci Curbastro, 34<br><a href="${airbnbMapsUrl}" target="_blank" style="color: #c16622; font-weight: bold;">Abrir Maps 📍</a>`);
 
-            // Atrações (Places)
+            // Atrações
             const places = [
                 { name: "Pantheon", pos: [41.8986, 12.4769], day: 4, cat: "Atração" },
                 { name: "Piazza Navona", pos: [41.8992, 12.4731], day: 4, cat: "Atração" },
                 { name: "Trevi Fountain", pos: [41.9009, 12.4833], day: 4, cat: "Atração" },
                 { name: "Spanish Steps", pos: [41.9059, 12.4827], day: 4, cat: "Atração" },
                 { name: "Ostia Antica", pos: [41.7558, 12.2921], day: 5, cat: "Arqueologia" },
-                { name: "Le Levain Roma", pos: [41.8864, 12.4695], day: 6, cat: "Padaria/Café" },
-                { name: "Mordi & Vai", pos: [41.8789, 12.4769], day: 6, cat: "Sandwiches" },
+                { name: "Le Levain Roma", pos: [41.8864, 12.4695], day: 6, cat: "Café" },
                 { name: "Catacumbas", pos: [41.8587, 12.5106], day: 6, cat: "História" },
                 { name: "Villa dei Quintili", pos: [41.8306, 12.5615], day: 6, cat: "Parque" },
-                { name: "Coliseum (Meeting Point)", pos: [41.8895, 12.4907], day: 7, cat: "Visita Guiada" },
+                { name: "Coliseum (Guide Encontro)", pos: [41.8895, 12.4907], day: 7, cat: "Visita Guiada" },
                 { name: "Palatine Hill", pos: [41.8892, 12.4875], day: 7, cat: "História" },
-                { name: "Circus Maximus", pos: [41.8860, 12.4853], day: 7, cat: "Atração" },
+                { name: "Circus Maximus", pos: [41.8860, 12.4853], day: 7, cat: "História" },
                 { name: "Bronze Door", pos: [41.9022, 12.4557], day: 7, cat: "Bilhetes Papa" },
                 { name: "Audiência Papal", pos: [41.9021, 12.4539], day: 8, cat: "Vaticano" },
                 { name: "Vatican Museums", pos: [41.9065, 12.4536], day: 8, cat: "Museu" },
+                { name: "Castel Sant'Angelo", pos: [41.9031, 12.4663], day: 8, cat: "Atração" },
                 { name: "Palazzo Nuovo", pos: [41.8938, 12.4829], day: 9, cat: "Capitólio" },
                 { name: "Lupa Capitolina", pos: [41.8930, 12.4842], day: 9, cat: "Atração" }
             ];
 
-            // Restaurantes (Full List)
+            // Restaurantes
             const restaurants = [
-                { name: "Supplizio", pos: [41.8972, 12.4674], cat: "Merenda", dish: "Supplì clássico ou Cacio e Pepe" },
-                { name: "Bonci Pizzarium", pos: [41.9077, 12.4485], cat: "Pizza", dish: "Pizza al taglio criativa" },
-                { name: "La Gatta Mangiona", pos: [41.8795, 12.4582], cat: "Pizza", dish: "Pizza e Supplì Gourmet" },
-                { name: "I Supplì", pos: [41.8887, 12.4716], cat: "Street Food", dish: "Supplì clássico" },
-                { name: "Antico Forno Roscioli", pos: [41.8944, 12.4746], cat: "Pizza", dish: "Pizza Bianca com Mortadela" },
-                { name: "Frontoni dal 1921", pos: [41.8831, 12.4697], cat: "Pizza", dish: "Pizza al taglio tradicional" },
-                { name: "Nonna Betta", pos: [41.8927, 12.4776], cat: "Judaico", dish: "Carciofi alla Giudía" },
-                { name: "Ristorante Piperno", pos: [41.8926, 12.4782], cat: "Judaico", dish: "Alcachofras fritas" },
-                { name: "Da Cesare al Casaletto", pos: [41.8715, 12.4433], cat: "Trattoria", dish: "Culinária romana clássica" },
+                { name: "Supplizio", pos: [41.8972, 12.4674], cat: "Merenda", dish: "Supplì clássico" },
+                { name: "Bonci Pizzarium", pos: [41.9077, 12.4485], cat: "Pizza", dish: "Pizza al taglio" },
+                { name: "La Gatta Mangiona", pos: [41.8795, 12.4582], cat: "Pizza", dish: "Pizza Gourmet" },
+                { name: "I Supplì", pos: [41.8887, 12.4716], cat: "Street Food", dish: "Supplì rápido" },
+                { name: "Antico Forno Roscioli", pos: [41.8944, 12.4746], cat: "Pizza", dish: "Pizza Bianca" },
+                { name: "Nonna Betta", pos: [41.8927, 12.4776], cat: "Judaico", dish: "Carciofi" },
+                { name: "Piperno", pos: [41.8926, 12.4782], cat: "Judaico", dish: "Carciofi" },
+                { name: "Da Cesare", pos: [41.8715, 12.4433], cat: "Trattoria", dish: "Gricia" },
                 { name: "Felice a Testaccio", pos: [41.8790, 12.4786], cat: "Trattoria", dish: "Cacio e Pepe" },
-                { name: "Roscioli Salumeria", pos: [41.8942, 12.4741], cat: "Gastronomia", dish: "A Carbonara famosa" },
-                { name: "Trecca - Roma", pos: [41.8546, 12.4846], cat: "Trattoria", dish: "Culinária romana moderna" },
-                { name: "Checchino dal 1887", pos: [41.8773, 12.4764], cat: "Histórico", dish: "Abbacchio a Scottadito" },
-                { name: "Osteria Fratelli Mori", pos: [41.8744, 12.4841], cat: "Trattoria", dish: "Cordeiro grelhado" },
-                { name: "Trattoria Pennestri", pos: [41.8732, 12.4831], cat: "Moderna", dish: "Massas e Carnes" },
-                { name: "Pasticceria Regoli", pos: [41.8947, 12.5028], cat: "Sobremesa", dish: "Maritozzo" },
-                { name: "Il Maritozzaro", pos: [41.8735, 12.4674], cat: "Sobremesa", dish: "Maritozzo com panna" },
-                { name: "Pompi", pos: [41.9056, 12.4795], cat: "Sobremesa", dish: "Tiramisù clássico" },
-                { name: "Two Sizes", pos: [41.8993, 12.4698], cat: "Sobremesa", dish: "Tiramisù variado" },
-                { name: "Giolitti", pos: [41.9015, 12.4781], cat: "Gelato", dish: "Gelato clássico" },
-                { name: "Otaleg", pos: [41.8884, 12.4721], cat: "Gelato", dish: "Gelato artesanal" },
-                { name: "Forno Feliziani", pos: [41.9090, 12.4513], cat: "Padaria", dish: "Colomba Pasquale" }
+                { name: "Roscioli Salumeria", pos: [41.8942, 12.4741], cat: "Gourmet", dish: "Carbonara" },
+                { name: "Trecca", pos: [41.8546, 12.4846], cat: "Trattoria", dish: "Massas" },
+                { name: "Checchino dal 1887", pos: [41.8773, 12.4764], cat: "Histórico", dish: "Abbacchio" },
+                { name: "Osteria Mori", pos: [41.8744, 12.4841], cat: "Familiar", dish: "Cordeiro" },
+                { name: "Il Maritozzaro", pos: [41.8735, 12.4674], cat: "Sobremesa", dish: "Maritozzo" },
+                { name: "Pompi", pos: [41.9056, 12.4795], cat: "Sobremesa", dish: "Tiramisù" },
+                { name: "Giolitti", pos: [41.9015, 12.4781], cat: "Gelato", dish: "Gelato" }
             ];
 
             places.forEach(p => {
                 const marker = L.marker(p.pos, { icon: L.divIcon({ className: 'day-marker-pin', html: `<div style="background-color: ${dayColors[p.day]}; width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white;">${p.day}</div>`, iconSize: [28, 28], iconAnchor: [14, 14] }) }).addTo(map);
-                marker.bindTooltip(`
-                    <span class="tooltip-title">${p.name}</span>
-                    <span class="tooltip-cat">Dia ${p.day} • ${p.cat}</span>
-                    <span class="tooltip-maps-hint">📍 Clique para abrir no Maps</span>
-                `, { direction: 'top', className: 'custom-map-tooltip' });
+                marker.bindTooltip(`<span class="tooltip-title">${p.name}</span><span class="tooltip-cat">Dia ${p.day} • ${p.cat}</span><span class="tooltip-maps-hint">📍 Clique para Abrir Maps</span>`, { direction: 'top', className: 'custom-map-tooltip' });
                 marker.on('click', () => { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}+Rome`, '_blank'); });
                 markersByGroup[p.day].push(marker);
             });
 
             restaurants.forEach(r => {
                 const marker = L.marker(r.pos, { icon: L.divIcon({ className: 'day-marker-pin', html: `<div style="background-color: var(--resto-pin); width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; color: white; font-size: 10px;">🍴</div>`, iconSize: [18, 18], iconAnchor: [9, 9] }) }).addTo(map);
-                marker.bindTooltip(`
-                    <span class="tooltip-title">${r.name}</span>
-                    <span class="tooltip-cat">${r.cat}</span>
-                    <span class="tooltip-dish">⭐ Famoso por: ${r.dish}</span>
-                    <span class="tooltip-maps-hint">📍 Clique para abrir no Maps</span>
-                `, { direction: 'top', className: 'custom-map-tooltip' });
+                marker.bindTooltip(`<span class="tooltip-title">${r.name}</span><span class="tooltip-cat">${r.cat}</span><span class="tooltip-dish">⭐ Famoso por: ${r.dish}</span><span class="tooltip-maps-hint">📍 Clique para Abrir Maps</span>`, { direction: 'top', className: 'custom-map-tooltip' });
                 marker.on('click', () => { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name)}+Rome`, '_blank'); });
                 markersByGroup['resto'].push(marker);
             });
